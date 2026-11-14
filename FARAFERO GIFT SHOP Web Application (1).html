@@ -673,9 +673,9 @@
                     <select id="prod-category" class="w-full border p-2.5 rounded-xl bg-slate-50 font-bold text-slate-800"></select>
                 </div>
                 <div>
-                    <label class="text-slate-600 block mb-1">صورة الهدية (رفع من الموبايل أو رابط):</label>
+                    <label class="text-slate-600 block mb-1">صورة الهدية (رفع من الموبايل أو رابط سريع):</label>
                     <div class="flex gap-2 items-center">
-                        <input type="text" id="prod-image" placeholder="رابط الصورة أو سيتم إضافتها أوتوماتيك..." class="w-full border p-2 rounded-xl text-[11px] bg-slate-50 font-semibold" readonly>
+                        <input type="text" id="prod-image" placeholder="رابط الصورة أو سيتم إضافتها أوتوماتيك..." class="w-full border p-2 rounded-xl text-[11px] bg-slate-50 font-semibold">
                         <input type="file" id="prod-file-input" accept="image/*" onchange="handleMobileImageUpload(event)" class="hidden">
                         <button type="button" onclick="document.getElementById('prod-file-input').click()" class="bg-[#C5A059] hover:bg-[#b08b49] text-white px-3.5 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap shadow-md flex items-center">
                             <i class="fa-solid fa-cloud-arrow-up ml-1"></i> اختر صورة
@@ -684,7 +684,7 @@
                     <!-- معاينة الصورة المصغرة المرفوعة -->
                     <div id="image-preview-container" class="mt-2 hidden flex items-center gap-2 bg-amber-50/60 p-2 rounded-xl border border-amber-200">
                         <img id="prod-thumb-preview" src="" class="w-12 h-12 rounded-lg object-cover shadow-sm">
-                        <span class="text-[11px] font-bold text-emerald-700">✓ تم تحميل وضغط الصورة بنجاح جاهزة للحفظ</span>
+                        <span class="text-[11px] font-bold text-emerald-700">✓ تم ضغط الصورة وجعلها فائقة السرعة</span>
                     </div>
                 </div>
             </div>
@@ -830,37 +830,37 @@
         };
 
         const defaultNewProducts = [
-            { id: "p1", code: "G-001", name: "دبدوب أحمر عملاق كلاسيك", category: "دباديب", cost: 250, price: 450, stock: 100, image: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?w=500&q=80" },
-            { id: "p2", code: "G-002", name: "دبدوب بنكي محبوك بشريطة", category: "دباديب", cost: 180, price: 320, stock: 100, image: "https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=500&q=80" },
-            { id: "p3", code: "G-003", name: "دبدوب أبيض قطيفة ناعم", category: "دباديب", cost: 200, price: 380, stock: 100, image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=500&q=80" },
-            { id: "p4", code: "G-004", name: "دبدوب بني فائق النعومة", category: "دباديب", cost: 220, price: 400, stock: 100, image: "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=500&q=80" },
-            { id: "p5", code: "G-005", name: "دبدوب رمادي مع قلادة قلب", category: "دباديب", cost: 190, price: 350, stock: 100, image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=500&q=80" },
-            { id: "p6", code: "G-006", name: "بوكيه ورد جوري أحمر طبيعي", category: "ورد", cost: 200, price: 380, stock: 100, image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=500&q=80" },
-            { id: "p7", code: "G-007", name: "بوكيه ورد توليب أبيض فاخر", category: "ورد", cost: 220, price: 420, stock: 100, image: "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=500&q=80" },
-            { id: "p8", code: "G-008", name: "باقة ورد زهرية مجمعة للمناسبات", category: "ورد", cost: 250, price: 450, stock: 100, image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=500&q=80" },
-            { id: "p9", code: "G-009", name: "صندوق ورد أصفر ملكي", category: "ورد", cost: 280, price: 500, stock: 100, image: "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=500&q=80" },
-            { id: "p10", code: "G-010", name: "بوكيه ورد جوري بنفشي فريد", category: "ورد", cost: 230, price: 430, stock: 100, image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80" },
-            { id: "p11", code: "G-011", name: "فازة ورد دوار الشمس المشرق", category: "ورد", cost: 180, price: 340, stock: 100, image: "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=500&q=80" },
-            { id: "p12", code: "G-012", name: "سلسلة استانلس فضي طلاء ثقيل", category: "هدايا استانلس", cost: 90, price: 180, stock: 100, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80" },
-            { id: "p13", code: "G-013", name: "سوار استانلس ذهبي مرصع بالفصوص", category: "هدايا استانلس", cost: 120, price: 230, stock: 100, image: "https://images.unsplash.com/photo-1611591475165-385fb9f7a5bd?w=500&q=80" },
-            { id: "p14", code: "G-014", name: "خاتم استانلس مطعم بحجر عقيق", category: "هدايا استانلس", cost: 70, price: 140, stock: 100, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500&q=80" },
-            { id: "p15", code: "G-015", name: "ميدالية مفاتيح استانلس محفورة", category: "هدايا استانلس", cost: 50, price: 110, stock: 100, image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&q=80" },
-            { id: "p16", code: "G-016", name: "خلخال استانلس ناعم أنيق", category: "هدايا استانلس", cost: 60, price: 130, stock: 100, image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&q=80" },
-            { id: "p17", code: "G-017", name: "حلق استانلس كوري عصري", category: "هدايا استانلس", cost: 80, price: 160, stock: 100, image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=500&q=80" },
-            { id: "p18", code: "G-018", name: "طقم استانلس (سلسلة + انسيال)", category: "هدايا استانلس", cost: 160, price: 300, stock: 100, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80" },
-            { id: "p19", code: "G-019", name: "شنطة يد جلد سوداء كلاسيك", category: "شنط حريمى", cost: 280, price: 520, stock: 100, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&q=80" },
-            { id: "p20", code: "G-020", name: "شنطة كروس جلد بني فاخرة", category: "شنط حريمى", cost: 240, price: 460, stock: 100, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500&q=80" },
-            { id: "p21", code: "G-021", name: "حقيبة سهرة بيج بأقفال ذهبية", category: "شنط حريمى", cost: 300, price: 580, stock: 100, image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=500&q=80" },
-            { id: "p22", code: "G-022", name: "شنطة حريمي حمراء أنيقة", category: "شنط حريمى", cost: 260, price: 490, stock: 100, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80" },
-            { id: "p23", code: "G-023", name: "حقيبة ظهر نسائية جلد ناعم", category: "شنط حريمى", cost: 270, price: 510, stock: 100, image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80" },
-            { id: "p24", code: "G-024", name: "كليتش حريمي مطرزة للسهرات", category: "شنط حريمى", cost: 210, price: 410, stock: 100, image: "https://images.unsplash.com/photo-1575032617751-6d3381e4b97d?w=500&q=80" }
+            { id: "p1", code: "G-001", name: "دبدوب أحمر عملاق كلاسيك", category: "دباديب", cost: 250, price: 450, stock: 100, image: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?w=300&q=70" },
+            { id: "p2", code: "G-002", name: "دبدوب بنكي محبوك بشريطة", category: "دباديب", cost: 180, price: 320, stock: 100, image: "https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=300&q=70" },
+            { id: "p3", code: "G-003", name: "دبدوب أبيض قطيفة ناعم", category: "دباديب", cost: 200, price: 380, stock: 100, image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=300&q=70" },
+            { id: "p4", code: "G-004", name: "دبدوب بني فائق النعومة", category: "دباديب", cost: 220, price: 400, stock: 100, image: "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=300&q=70" },
+            { id: "p5", code: "G-005", name: "دبدوب رمادي مع قلادة قلب", category: "دباديب", cost: 190, price: 350, stock: 100, image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=300&q=70" },
+            { id: "p6", code: "G-006", name: "بوكيه ورد جوري أحمر طبيعي", category: "ورد", cost: 200, price: 380, stock: 100, image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=300&q=70" },
+            { id: "p7", code: "G-007", name: "بوكيه ورد توليب أبيض فاخر", category: "ورد", cost: 220, price: 420, stock: 100, image: "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=300&q=70" },
+            { id: "p8", code: "G-008", name: "باقة ورد زهرية مجمعة للمناسبات", category: "ورد", cost: 250, price: 450, stock: 100, image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=300&q=70" },
+            { id: "p9", code: "G-009", name: "صندوق ورد أصفر ملكي", category: "ورد", cost: 280, price: 500, stock: 100, image: "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=300&q=70" },
+            { id: "p10", code: "G-010", name: "بوكيه ورد جوري بنفشي فريد", category: "ورد", cost: 230, price: 430, stock: 100, image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&q=70" },
+            { id: "p11", code: "G-011", name: "فازة ورد دوار الشمس المشرق", category: "ورد", cost: 180, price: 340, stock: 100, image: "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=300&q=70" },
+            { id: "p12", code: "G-012", name: "سلسلة استانلس فضي طلاء ثقيل", category: "هدايا استانلس", cost: 90, price: 180, stock: 100, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&q=70" },
+            { id: "p13", code: "G-013", name: "سوار استانلس ذهبي مرصع بالفصوص", category: "هدايا استانلس", cost: 120, price: 230, stock: 100, image: "https://images.unsplash.com/photo-1611591475165-385fb9f7a5bd?w=300&q=70" },
+            { id: "p14", code: "G-014", name: "خاتم استانلس مطعم بحجر عقيق", category: "هدايا استانلس", cost: 70, price: 140, stock: 100, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300&q=70" },
+            { id: "p15", code: "G-015", name: "ميدالية مفاتيح استانلس محفورة", category: "هدايا استانلس", cost: 50, price: 110, stock: 100, image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=300&q=70" },
+            { id: "p16", code: "G-016", name: "خلخال استانلس ناعم أنيق", category: "هدايا استانلس", cost: 60, price: 130, stock: 100, image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300&q=70" },
+            { id: "p17", code: "G-017", name: "حلق استانلس كوري عصري", category: "هدايا استانلس", cost: 80, price: 160, stock: 100, image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=300&q=70" },
+            { id: "p18", code: "G-018", name: "طقم استانلس (سلسلة + انسيال)", category: "هدايا استانلس", cost: 160, price: 300, stock: 100, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300&q=70" },
+            { id: "p19", code: "G-019", name: "شنطة يد جلد سوداء كلاسيك", category: "شنط حريمى", cost: 280, price: 520, stock: 100, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=300&q=70" },
+            { id: "p20", code: "G-020", name: "شنطة كروس جلد بني فاخرة", category: "شنط حريمى", cost: 240, price: 460, stock: 100, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=300&q=70" },
+            { id: "p21", code: "G-021", name: "حقيبة سهرة بيج بأقفال ذهبية", category: "شنط حريمى", cost: 300, price: 580, stock: 100, image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=300&q=70" },
+            { id: "p22", code: "G-022", name: "شنطة حريمي حمراء أنيقة", category: "شنط حريمى", cost: 260, price: 490, stock: 100, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=300&q=70" },
+            { id: "p23", code: "G-023", name: "حقيبة ظهر نسائية جلد ناعم", category: "شنط حريمى", cost: 270, price: 510, stock: 100, image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&q=70" },
+            { id: "p24", code: "G-024", name: "كليتش حريمي مطرزة للسهرات", category: "شنط حريمى", cost: 210, price: 410, stock: 100, image: "https://images.unsplash.com/photo-1575032617751-6d3381e4b97d?w=300&q=70" }
         ];
 
         function initApp() {
             startDataListeners();
         }
 
-        // الحل النهائي المطلق: استخدام createImageBitmap لضغط وقراءة الصورة مباشرة بحجم صغير بدون تحميل الـ RAM بمليارات البكسلات
+        // ضغط الصورة الفائق الحجم والصراعي لضمان سرعة خيالية وعدم ثقل اللينك نهائياً
         async function handleMobileImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -871,10 +871,10 @@
             }
 
             try {
-                // فك ضغط وقراءة الصورة مباشرة بالحجم المطلوب (أقصى عرض وطول 400 بكسل) دون تحميل الملف الأصلي الضخم في الذاكرة
+                // ضبط أبعاد الصورة على 150 بكسل فقط لتكون خفيفة للغاية ولا تسبب أي بطء في قاعدة البيانات أو اللينك
                 const bitmap = await createImageBitmap(file, { 
-                    resizeWidth: 400, 
-                    resizeHeight: 400, 
+                    resizeWidth: 150, 
+                    resizeHeight: 150, 
                     resizeQuality: 'low' 
                 });
 
@@ -884,13 +884,13 @@
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(bitmap, 0, 0);
 
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.4);
                 document.getElementById('prod-image').value = compressedDataUrl;
                 document.getElementById('prod-thumb-preview').src = compressedDataUrl;
                 document.getElementById('image-preview-container').classList.remove('hidden');
             } catch (error) {
                 console.error(error);
-                alert('عذراً، حدث خطأ أثناء معالجة الصورة. جرب اختيار صورة أخرى أو من الاستوديو.');
+                alert('عذراً، حدث خطأ أثناء ضغط الصورة. جرب اختيار صورة أخرى.');
             }
         }
 
@@ -1800,7 +1800,7 @@
             const price = parseFloat(document.getElementById('prod-price').value);
             const stock = parseInt(document.getElementById('prod-stock').value) || 100;
             const category = document.getElementById('prod-category').value;
-            const image = document.getElementById('prod-image').value.trim() || "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500&q=80";
+            const image = document.getElementById('prod-image').value.trim() || "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=300&q=70";
 
             if (!name || isNaN(price)) return alert('برجاء إدخال اسم الهدية وسعر البيع!');
 
