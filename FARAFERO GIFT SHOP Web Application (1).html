@@ -1255,26 +1255,35 @@
 
             document.getElementById('pos-modal-ord-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
+            let disc = parseFloat(order.discount) || 0;
+            let pack = parseFloat(order.packaging) || 0;
+            let ship = parseFloat(order.shipping) || 0;
+
+            // Auto fallback for older orders if difference exists
+            if (order.total > (subtotal - disc + pack + ship) && pack === 0 && ship === 0) {
+                ship = order.total - (subtotal - disc);
+            }
+
             const discRow = document.getElementById('pos-modal-ord-disc-row');
-            if (order.discount && order.discount > 0) {
+            if (disc > 0) {
                 discRow.classList.remove('hidden');
-                document.getElementById('pos-modal-ord-disc-val').innerText = `${order.discount.toFixed(2)} EGP`;
+                document.getElementById('pos-modal-ord-disc-val').innerText = `${disc.toFixed(2)} EGP`;
             } else {
                 discRow.classList.add('hidden');
             }
 
             const packRow = document.getElementById('pos-modal-ord-pack-row');
-            if (order.packaging && order.packaging > 0) {
+            if (pack > 0) {
                 packRow.classList.remove('hidden');
-                document.getElementById('pos-modal-ord-pack-val').innerText = `${order.packaging.toFixed(2)} EGP`;
+                document.getElementById('pos-modal-ord-pack-val').innerText = `${pack.toFixed(2)} EGP`;
             } else {
                 packRow.classList.add('hidden');
             }
 
             const shipRow = document.getElementById('pos-modal-ord-ship-row');
-            if (order.shipping && order.shipping > 0) {
+            if (ship > 0) {
                 shipRow.classList.remove('hidden');
-                document.getElementById('pos-modal-ord-ship-val').innerText = `${order.shipping.toFixed(2)} EGP`;
+                document.getElementById('pos-modal-ord-ship-val').innerText = `${ship.toFixed(2)} EGP`;
             } else {
                 shipRow.classList.add('hidden');
             }
@@ -1480,26 +1489,34 @@
 
             document.getElementById('modal-ord-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
+            let disc = parseFloat(order.discount) || 0;
+            let pack = parseFloat(order.packaging) || 0;
+            let ship = parseFloat(order.shipping) || 0;
+
+            if (order.total > (subtotal - disc + pack + ship) && pack === 0 && ship === 0) {
+                ship = order.total - (subtotal - disc);
+            }
+
             const discRow = document.getElementById('modal-ord-disc-row');
-            if (order.discount && order.discount > 0) {
+            if (disc > 0) {
                 discRow.classList.remove('hidden');
-                document.getElementById('modal-ord-disc-val').innerText = `${order.discount.toFixed(2)} EGP`;
+                document.getElementById('modal-ord-disc-val').innerText = `${disc.toFixed(2)} EGP`;
             } else {
                 discRow.classList.add('hidden');
             }
 
             const packRow = document.getElementById('modal-ord-pack-row');
-            if (order.packaging && order.packaging > 0) {
+            if (pack > 0) {
                 packRow.classList.remove('hidden');
-                document.getElementById('modal-ord-pack-val').innerText = `${order.packaging.toFixed(2)} EGP`;
+                document.getElementById('modal-ord-pack-val').innerText = `${pack.toFixed(2)} EGP`;
             } else {
                 packRow.classList.add('hidden');
             }
 
             const shipRow = document.getElementById('modal-ord-ship-row');
-            if (order.shipping && order.shipping > 0) {
+            if (ship > 0) {
                 shipRow.classList.remove('hidden');
-                document.getElementById('modal-ord-ship-val').innerText = `${order.shipping.toFixed(2)} EGP`;
+                document.getElementById('modal-ord-ship-val').innerText = `${ship.toFixed(2)} EGP`;
             } else {
                 shipRow.classList.add('hidden');
             }
@@ -1663,8 +1680,17 @@
 
             document.getElementById('rec-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
+            discount = parseFloat(discount) || 0;
+            packaging = parseFloat(packaging) || 0;
+            shipping = parseFloat(shipping) || 0;
+
+            // الذكاء التلقائي: إذا كانت الفاتورة قديمة ولا تحتوي على شحن أو تغليف محفوظ، لكن الإجمالي أكبر من الفرعي، يتم وضع الفارق كشحن تلقائياً
+            if (total > (subtotal - discount + packaging + shipping) && packaging === 0 && shipping === 0) {
+                shipping = total - (subtotal - discount);
+            }
+
             const discRow = document.getElementById('rec-discount-row');
-            if (discount && discount > 0) {
+            if (discount > 0) {
                 discRow.classList.remove('hidden');
                 document.getElementById('rec-discount-val').innerText = `${discount.toFixed(2)} EGP`;
             } else {
@@ -1672,7 +1698,7 @@
             }
 
             const packRow = document.getElementById('rec-packaging-row');
-            if (packaging && packaging > 0) {
+            if (packaging > 0) {
                 packRow.classList.remove('hidden');
                 document.getElementById('rec-packaging-val').innerText = `${packaging.toFixed(2)} EGP`;
             } else {
@@ -1680,7 +1706,7 @@
             }
 
             const shipRow = document.getElementById('rec-shipping-row');
-            if (shipping && shipping > 0) {
+            if (shipping > 0) {
                 shipRow.classList.remove('hidden');
                 document.getElementById('rec-shipping-val').innerText = `${shipping.toFixed(2)} EGP`;
             } else {
