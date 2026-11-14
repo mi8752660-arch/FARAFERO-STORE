@@ -1256,7 +1256,7 @@
             document.getElementById('pos-modal-ord-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
             const discRow = document.getElementById('pos-modal-ord-disc-row');
-            if (order.discount > 0) {
+            if (order.discount && order.discount > 0) {
                 discRow.classList.remove('hidden');
                 document.getElementById('pos-modal-ord-disc-val').innerText = `${order.discount.toFixed(2)} EGP`;
             } else {
@@ -1264,7 +1264,7 @@
             }
 
             const packRow = document.getElementById('pos-modal-ord-pack-row');
-            if (order.packaging > 0) {
+            if (order.packaging && order.packaging > 0) {
                 packRow.classList.remove('hidden');
                 document.getElementById('pos-modal-ord-pack-val').innerText = `${order.packaging.toFixed(2)} EGP`;
             } else {
@@ -1272,7 +1272,7 @@
             }
 
             const shipRow = document.getElementById('pos-modal-ord-ship-row');
-            if (order.shipping > 0) {
+            if (order.shipping && order.shipping > 0) {
                 shipRow.classList.remove('hidden');
                 document.getElementById('pos-modal-ord-ship-val').innerText = `${order.shipping.toFixed(2)} EGP`;
             } else {
@@ -1289,13 +1289,13 @@
         function downloadPOSOrderAsImage() {
             if (!state.posActiveModalOrder) return;
             const o = state.posActiveModalOrder;
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.packaging, o.shipping);
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount || 0, o.packaging || 0, o.shipping || 0);
         }
 
         function previewDirectOrderAsImage(firebaseId) {
             const o = state.orders.find(x => x.firebaseId === firebaseId);
             if (!o) return;
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.packaging, o.shipping);
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount || 0, o.packaging || 0, o.shipping || 0);
         }
 
         function addToPOS(id) {
@@ -1481,7 +1481,7 @@
             document.getElementById('modal-ord-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
             const discRow = document.getElementById('modal-ord-disc-row');
-            if (order.discount > 0) {
+            if (order.discount && order.discount > 0) {
                 discRow.classList.remove('hidden');
                 document.getElementById('modal-ord-disc-val').innerText = `${order.discount.toFixed(2)} EGP`;
             } else {
@@ -1489,7 +1489,7 @@
             }
 
             const packRow = document.getElementById('modal-ord-pack-row');
-            if (order.packaging > 0) {
+            if (order.packaging && order.packaging > 0) {
                 packRow.classList.remove('hidden');
                 document.getElementById('modal-ord-pack-val').innerText = `${order.packaging.toFixed(2)} EGP`;
             } else {
@@ -1497,7 +1497,7 @@
             }
 
             const shipRow = document.getElementById('modal-ord-ship-row');
-            if (order.shipping > 0) {
+            if (order.shipping && order.shipping > 0) {
                 shipRow.classList.remove('hidden');
                 document.getElementById('modal-ord-ship-val').innerText = `${order.shipping.toFixed(2)} EGP`;
             } else {
@@ -1534,7 +1534,7 @@
         function downloadCurrentModalOrderAsImage() {
             if (!state.currentActiveModalOrder) return;
             const o = state.currentActiveModalOrder;
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.packaging, o.shipping);
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount || 0, o.packaging || 0, o.shipping || 0);
         }
 
         function increaseStock(id) {
@@ -1664,7 +1664,7 @@
             document.getElementById('rec-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
             const discRow = document.getElementById('rec-discount-row');
-            if (discount > 0) {
+            if (discount && discount > 0) {
                 discRow.classList.remove('hidden');
                 document.getElementById('rec-discount-val').innerText = `${discount.toFixed(2)} EGP`;
             } else {
@@ -1672,7 +1672,7 @@
             }
 
             const packRow = document.getElementById('rec-packaging-row');
-            if (packaging > 0) {
+            if (packaging && packaging > 0) {
                 packRow.classList.remove('hidden');
                 document.getElementById('rec-packaging-val').innerText = `${packaging.toFixed(2)} EGP`;
             } else {
@@ -1680,7 +1680,7 @@
             }
 
             const shipRow = document.getElementById('rec-shipping-row');
-            if (shipping > 0) {
+            if (shipping && shipping > 0) {
                 shipRow.classList.remove('hidden');
                 document.getElementById('rec-shipping-val').innerText = `${shipping.toFixed(2)} EGP`;
             } else {
