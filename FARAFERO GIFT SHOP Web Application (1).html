@@ -87,7 +87,7 @@
         </div>
     </header>
 
-    <!-- NAVIGATION BAR (تم حذف الأكثر مبيعا لإعطاء مساحة مريحة لجميع الأزرار) -->
+    <!-- NAVIGATION BAR -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around shadow-2xl z-50 max-w-xl mx-auto md:max-w-7xl" dir="rtl">
         <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn text-xs font-bold text-[#C5A059] flex flex-col items-center flex-1 px-2 py-1 transition-all">
             <i class="fa-solid fa-gift text-base mb-1"></i> الهدايا
@@ -673,8 +673,14 @@
                     <select id="prod-category" class="w-full border p-2.5 rounded-xl bg-slate-50 font-bold text-slate-800"></select>
                 </div>
                 <div>
-                    <label class="text-slate-600 block mb-1">رابط الصورة (URL):</label>
-                    <input type="text" id="prod-image" placeholder="https://..." class="w-full border p-2.5 rounded-xl">
+                    <label class="text-slate-600 block mb-1">صورة الهدية (رابط أو رفع من الموبايل):</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="prod-image" placeholder="https://..." class="w-full border p-2.5 rounded-xl text-xs font-semibold">
+                        <input type="file" id="prod-file-input" accept="image/*" onchange="handleMobileImageUpload(event)" class="hidden">
+                        <button type="button" onclick="document.getElementById('prod-file-input').click()" class="bg-slate-800 hover:bg-slate-900 text-white px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm flex items-center">
+                            <i class="fa-solid fa-upload ml-1"></i> رفع صورة
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="flex space-x-2 space-x-reverse pt-2">
@@ -697,7 +703,7 @@
         </div>
     </div>
 
-    <!-- PRINTABLE RECEIPT TEMPLATE (الشكل المخفي للرسم) -->
+    <!-- PRINTABLE RECEIPT TEMPLATE -->
     <div id="printable-receipt" class="hidden max-w-2xl mx-auto p-8 bg-white text-xs space-y-6" dir="ltr">
         <div class="flex justify-between items-start border-b border-slate-300 pb-5">
             <div class="space-y-1">
@@ -847,6 +853,51 @@
 
         function initApp() {
             startDataListeners();
+        }
+
+        // دالة رفع وصغط الصورة من الموبايل لمنع تعليق النظام
+        function handleMobileImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.match('image.*')) {
+                alert('برجاء اختيار ملف صورة صالح!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 600;
+                    const MAX_HEIGHT = 600;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    document.getElementById('prod-image').value = compressedDataUrl;
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         function startDataListeners() {
@@ -1616,7 +1667,7 @@
                 `;
             });
 
-            document.getElementById('rec-[#C5A059]').innerText = subtotal.toFixed(2) + ' EGP';
+            document.getElementById('rec-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
             const discRow = document.getElementById('rec-discount-row');
             if (discount > 0) {
@@ -1712,6 +1763,7 @@
             document.getElementById('prod-price').value = '';
             document.getElementById('prod-stock').value = '100';
             document.getElementById('prod-image').value = '';
+            document.getElementById('prod-file-input').value = '';
             populateCategoryDropdown();
             document.getElementById('product-modal').classList.remove('hidden');
         }
@@ -1723,12 +1775,13 @@
             document.getElementById('edit-prod-id').value = p.id;
             document.getElementById('prod-code').value = p.code || 'G-001';
             document.getElementById('prod-name').value = p.name;
-            document.getElementById('prod-[#C5A059]').value = p.cost || 0;
+            document.getElementById('prod-cost').value = p.cost || 0;
             document.getElementById('prod-price').value = p.price;
             document.getElementById('prod-stock').value = p.stock;
             populateCategoryDropdown();
             document.getElementById('prod-category').value = p.category;
             document.getElementById('prod-image').value = p.image;
+            document.getElementById('prod-file-input').value = '';
             document.getElementById('product-modal').classList.remove('hidden');
         }
 
