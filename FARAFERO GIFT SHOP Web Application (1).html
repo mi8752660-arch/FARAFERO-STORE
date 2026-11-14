@@ -860,8 +860,8 @@
             startDataListeners();
         }
 
-        // الحل النهائي الجذري: استخدام ObjectURL لمنع تهنيج الموبايل نهائياً مع الصور الكبيرة جداً
-        function handleMobileImageUpload(event) {
+        // الحل النهائي المطلق: استخدام createImageBitmap لضغط وقراءة الصورة مباشرة بحجم صغير بدون تحميل الـ RAM بمليارات البكسلات
+        async function handleMobileImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
@@ -870,46 +870,28 @@
                 return;
             }
 
-            const objectUrl = URL.createObjectURL(file);
-            const img = new Image();
-
-            img.onload = function() {
-                URL.revokeObjectURL(objectUrl); // تنظيف الرابط المؤقت
+            try {
+                // فك ضغط وقراءة الصورة مباشرة بالحجم المطلوب (أقصى عرض وطول 400 بكسل) دون تحميل الملف الأصلي الضخم في الذاكرة
+                const bitmap = await createImageBitmap(file, { 
+                    resizeWidth: 400, 
+                    resizeHeight: 400, 
+                    resizeQuality: 'low' 
+                });
 
                 const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
-                const MAX_SIZE = 300; // حجم آمن تماماً وصغير لضمان عدم تجاوز حدود قاعدة البيانات
-
-                if (width > height) {
-                    if (width > MAX_SIZE) {
-                        height *= MAX_SIZE / width;
-                        width = MAX_SIZE;
-                    }
-                } else {
-                    if (height > MAX_SIZE) {
-                        width *= MAX_SIZE / height;
-                        height = MAX_SIZE;
-                    }
-                }
-
-                canvas.width = width;
-                canvas.height = height;
+                canvas.width = bitmap.width;
+                canvas.height = bitmap.height;
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
+                ctx.drawImage(bitmap, 0, 0);
 
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
                 document.getElementById('prod-image').value = compressedDataUrl;
                 document.getElementById('prod-thumb-preview').src = compressedDataUrl;
                 document.getElementById('image-preview-container').classList.remove('hidden');
-            };
-
-            img.onerror = function() {
-                URL.revokeObjectURL(objectUrl);
-                alert('عذراً، حدث خطأ أثناء قراءة الصورة. جرب اختيار صورة أخرى.');
-            };
-
-            img.src = objectUrl;
+            } catch (error) {
+                console.error(error);
+                alert('عذراً، حدث خطأ أثناء معالجة الصورة. جرب اختيار صورة أخرى أو من الاستوديو.');
+            }
         }
 
         function startDataListeners() {
