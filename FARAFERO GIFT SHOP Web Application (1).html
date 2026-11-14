@@ -727,7 +727,7 @@
             </table>
         </div>
 
-        <!-- تفاصيل الخصم، التغليف، والشحن الثابتة تماماً -->
+        <!-- خانات الإجماليات الخمسة الثابتة إجبارياً -->
         <div class="pt-4 border-t border-slate-200 space-y-3">
             <div id="rec-totals-container" class="w-64 ml-auto space-y-2 text-[11px] text-right"></div>
             <div class="w-full border-t border-slate-300 pt-3 text-center">
@@ -1159,7 +1159,7 @@
             });
         }
 
-        // دالة موحدة وثابتة تماماً لضمان ظهور الـ 5 خانات في أي فاتورة بدون استثناء
+        // دالة موحدة لفرض ظهور الخانات الخمسة دائماً إجبارياً
         function generateFixedTotalsHtml(subtotal, discount, packaging, shipping, total) {
             return `
                 <div class="flex justify-between text-slate-600">
@@ -1215,6 +1215,7 @@
                 `;
             });
 
+            // معالجة الأرقام للفواتير القديمة والجديدة لضمان عدم اختفاء أي خانة
             let disc = parseFloat(order.discount) || 0;
             let pack = parseFloat(order.packaging) || 0;
             let ship = parseFloat(order.shipping) || 0;
@@ -1235,13 +1236,29 @@
         function downloadPOSOrderAsImage() {
             if (!state.posActiveModalOrder) return;
             const o = state.posActiveModalOrder;
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount || 0, o.packaging || 0, o.shipping || 0);
+            let sub = 0;
+            o.detailedItems.forEach(i => sub += i.price * i.qty);
+            let disc = parseFloat(o.discount) || 0;
+            let pack = parseFloat(o.packaging) || 0;
+            let ship = parseFloat(o.shipping) || 0;
+            const calcSub = sub - disc + pack;
+            if (o.total > calcSub && ship === 0) ship = o.total - calcSub;
+
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, disc, pack, ship);
         }
 
         function previewDirectOrderAsImage(firebaseId) {
             const o = state.orders.find(x => x.firebaseId === firebaseId);
             if (!o) return;
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount || 0, o.packaging || 0, o.shipping || 0);
+            let sub = 0;
+            o.detailedItems.forEach(i => sub += i.price * i.qty);
+            let disc = parseFloat(o.discount) || 0;
+            let pack = parseFloat(o.packaging) || 0;
+            let ship = parseFloat(o.shipping) || 0;
+            const calcSub = sub - disc + pack;
+            if (o.total > calcSub && ship === 0) ship = o.total - calcSub;
+
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, disc, pack, ship);
         }
 
         function addToPOS(id) {
@@ -1463,7 +1480,15 @@
         function downloadCurrentModalOrderAsImage() {
             if (!state.currentActiveModalOrder) return;
             const o = state.currentActiveModalOrder;
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount || 0, o.packaging || 0, o.shipping || 0);
+            let sub = 0;
+            o.detailedItems.forEach(i => sub += i.price * i.qty);
+            let disc = parseFloat(o.discount) || 0;
+            let pack = parseFloat(o.packaging) || 0;
+            let ship = parseFloat(o.shipping) || 0;
+            const calcSub = sub - disc + pack;
+            if (o.total > calcSub && ship === 0) ship = o.total - calcSub;
+
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, disc, pack, ship);
         }
 
         function increaseStock(id) {
