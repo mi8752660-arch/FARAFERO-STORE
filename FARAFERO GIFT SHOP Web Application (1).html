@@ -1,5 +1,596 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+            function renderPOSRecentOrders() {
+            const list = document.getElementById('pos-recent-orders-list');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            const directOrders = state.orders.filter(o => o.type !== 'po' || o.status === 'approved');
+            if (directOrders.length === 0) {
+                list.innerHTML = '<p class="text-center text-slate-400 py-4 text-xs">لا توجد فواتير محل معتمدة بعد</p>';
+                return;
+            }
+
+            directOrders.slice(0, 5).forEach(o => {
+                list.innerHTML += `
+                    <div class="bg-white/90 border p-2.5 rounded-xl text-xs space-y-1 shadow-sm hover:bg-slate-50 transition-all">
+                        <div class="flex justify-between items-center cursor-pointer" onclick="openOrderDetails('${o.firebaseId}')">
+                            <b class="text-slate-900">${o.id}</b>
+                            <span class="font-black text-gold">${Math.round(o.total)} EGP</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px]">
+                            <span class="text-slate-600">العميل: ${o.customerName}</span>
+                            <button onclick="previewDirectOrderAsImage('${o.firebaseId}')" class="bg-slate-800 hover:bg-slate-900 text-white px-2 py-0.5 rounded font-bold transition-all">صورة الفاتورة</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function addToPOS(id) {
+            const p = state.products.find(x => x.id === id);
+            if (!p || p.stock <= 0) return alert('عذراً، نفذت الكمية من المخزون!');
+            const item = state.posCart.find(x => x.id === id);
+            if (item) {
+                if (item.qty + 1 > p.stock) return alert('الكمية المطلوبة أكبر من المتاح بالمخزن!');
+                item.qty++;
+            } else {
+                state.posCart.push({ ...p, qty: 1 });
+            }
+            renderPOSCart();
+        }
+
+        function removeFromPOS(idx) { state.posCart.splice(idx, 1); renderPOSCart(); }
+        function clearPOSCart() { state.posCart = []; renderPOSCart(); }
+
+        function renderPOSCart() {
+            const container = document.getElementById('pos-cart-items');
+            const countEl = document.getElementById('pos-cart-count');
+            const subtotalEl = document.getElementById('pos-subtotal');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            let subtotal = 0;
+            let totalQty = 0;
+
+            if (state.posCart.length === 0) {
+                container.innerHTML = '<p class="text-center text-slate-400 py-4">الفاتورة فارغة حالياً</p>';
+                if (countEl) countEl.innerText = '0 قطع';
+                if (subtotalEl) subtotalEl.innerText = '0 EGP';
+                document.getElementById('pos-grand-total').innerText = '0';
+                return;
+            }
+
+            state.posCart.forEach((i, idx) => {
+                subtotal += i.price * i.qty;
+                totalQty += i.qty;
+                container.innerHTML += `
+                    <div class="flex justify-between items-center py-1.5">
+                        <div>
+                            <span class="font-bold text-slate-800">${i.name}</span>
+                            <span class="text-slate-400 text-[10px] block">${i.price} EGP × ${i.qty}</span>
+                        </div>
+                        <div class="flex items-center space-x-2 space-x-reverse">
+                            <b class="text-slate-900">${i.price * i.qty} EGP</b>
+                            <button onclick="removeFromPOS(${idx})" class="text-rose-500 font-bold hover:text-rose-700 px-1">✕</button>
+                        </div>
+                    </div>`;
+            });
+
+            if (countEl) countEl.innerText = totalQty + ' قطع';
+            if (subtotalEl) subtotalEl.innerText = Math.round(subtotal) + ' EGP';
+
+            const discount = parseFloat(document.getElementById('pos-discount').value) || 0;
+            const packaging = parseFloat(document.getElementById('pos-packaging').value) || 0;
+            const shipping = parseFloat(document.getElementById('pos-shipping').value) || 0;
+            let grandTotal = subtotal - discount + packaging + shipping;
+            document.getElementById('pos-grand-total').innerText = Math.round(grandTotal);
+        }
+
+        function renderInventoryView() {
+            const tbody = document.getElementById('inventory-view-body');
+            const filterInput = document.getElementById('inventory-code-filter');
+            const healthyEl = document.getElementById('inv-healthy-count');
+            const lowEl = document.getElementById('inv-low-count');
+            if (!tbody) return;
+
+            const filterVal = filterInput ? filterInput.value.toLowerCase().trim() : '';
+            tbody.innerHTML = '';
+
+            let healthyCount = 0;
+            let lowCount = 0;
+            state.products.forEach(p => {
+                if (p.stock > 3) healthyCount++;
+                else lowCount++;
+            });
+
+            if (healthyEl) healthyEl.innerText = 'متوفر: ' + healthyCount;
+            if (lowEl) lowEl.innerText = 'منخفض: ' + lowCount;
+
+            const filtered = state.products.filter(p => (p.code && p.code.toLowerCase().includes(filterVal)) || (p.name && p.name.toLowerCase().includes(filterVal)));
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-slate-400 py-6">لا توجد هدايا مطابقة للبحث في المخزون</td></tr>';
+                return;
+            }
+
+            filtered.forEach(p => {
+                const isLow = p.stock <= 3;
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-slate-50">
+                        <td class="p-3"><img src="${p.image}" class="w-9 h-9 rounded-xl object-cover cursor-pointer" onclick="openImageZoom('${p.image}', '${p.name}')"></td>
+                        <td class="p-3 font-bold text-gold">${p.code || ''}</td>
+                        <td class="p-3 font-bold text-slate-900">${p.name}</td>
+                        <td class="p-3 text-slate-500">${p.category}</td>
+                        <td class="p-3 font-black text-gold">${Math.round(p.price)} EGP</td>
+                        <td class="p-3 font-bold text-slate-800">${p.stock}</td>
+                        <td class="p-3 text-left"><span class="${!isLow ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'} text-[10px] px-2.5 py-0.5 rounded font-bold">${!isLow ? 'متوفر' : 'منخفض'}</span></td>
+                    </tr>`;
+            });
+        }
+
+        function renderDashboard() {
+            const activeOrders = state.orders.filter(o => o.status !== 'cancelled' && (o.type !== 'po' || o.status === 'approved'));
+            const totalRevenue = activeOrders.reduce((a, b) => a + b.total, 0);
+            let totalCostVal = 0, totalValueVal = 0, totalPiecesVal = 0;
+
+            state.products.forEach(p => {
+                totalCostVal += (p.cost || 0) * (p.stock || 0);
+                totalValueVal += (p.price || 0) * (p.stock || 0);
+                totalPiecesVal += (p.stock || 0);
+            });
+
+            document.getElementById('dash-total-revenue').innerText = Math.round(totalRevenue);
+            document.getElementById('dash-total-orders').innerText = 'عدد الطلبات: ' + activeOrders.length;
+            document.getElementById('dash-total-cost').innerText = Math.round(totalCostVal);
+            document.getElementById('dash-total-value').innerText = Math.round(totalValueVal);
+            document.getElementById('dash-total-pieces').innerText = totalPiecesVal;
+            
+            const expectedProfitEl = document.getElementById('dash-expected-profit');
+            if (expectedProfitEl) expectedProfitEl.innerText = 'ربح متوقع: ' + Math.round(totalValueVal - totalCostVal) + ' EGP';
+
+            const skusCountEl = document.getElementById('dash-total-skus');
+            if (skusCountEl) skusCountEl.innerText = 'عدد الأصناف: ' + state.products.length;
+
+            const tbody = document.getElementById('admin-inventory-table');
+            const adminFilterInput = document.getElementById('admin-code-filter');
+            if (tbody) {
+                tbody.innerHTML = '';
+                const adminFilterVal = adminFilterInput ? adminFilterInput.value.toLowerCase().trim() : '';
+                const filteredProducts = state.products.filter(p => (p.code && p.code.toLowerCase().includes(adminFilterVal)) || (p.name && p.name.toLowerCase().includes(adminFilterVal)));
+                
+                filteredProducts.forEach(p => {
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-slate-50">
+                            <td class="p-2.5"><img src="${p.image}" class="w-8 h-8 rounded-lg object-cover"></td>
+                            <td class="p-2.5 font-bold text-gold">${p.code || ''}</td>
+                            <td class="p-2.5 font-bold text-slate-900">${p.name}</td>
+                            <td class="p-2.5 text-slate-600">${Math.round(p.cost || 0)} EGP</td>
+                            <td class="p-2.5 font-black text-gold">${Math.round(p.price)} EGP</td>
+                            <td class="p-2.5 font-bold text-slate-800">${p.stock}</td>
+                            <td class="p-2.5 text-left space-x-1 space-x-reverse">
+                                <button onclick="increaseStock('${p.id}')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 px-2.5 py-1 rounded-lg font-bold text-xs transition-all">+</button>
+                                <button onclick="openEditProductModal('${p.id}')" class="bg-sky-50 hover:bg-sky-100 text-sky-600 px-2.5 py-1 rounded-lg font-bold text-xs transition-all">تعديل</button>
+                                <button onclick="deleteProd('${p.id}')" class="text-rose-500 hover:text-rose-700 font-bold text-xs px-1">حذف</button>
+                            </td>
+                        </tr>`;
+                });
+            }
+
+            const recentList = document.getElementById('recent-orders-list');
+            if (recentList) {
+                recentList.innerHTML = '';
+                state.orders.slice(0, 5).forEach(o => {
+                    recentList.innerHTML += `
+                        <div class="bg-slate-50 border p-3 rounded-2xl flex justify-between items-center text-xs shadow-sm">
+                            <div>
+                                <b class="text-slate-900">${o.id}</b> - <span class="text-gold font-bold">${Math.round(o.total)} EGP</span>
+                                <p class="text-[10px] text-slate-500">العميل: ${o.customerName}</p>
+                            </div>
+                            <button onclick="openOrderDetails('${o.firebaseId}')" class="bg-slate-800 hover:bg-slate-900 text-white px-3 py-1 rounded-xl font-bold transition-all">معاينة</button>
+                        </div>`;
+                });
+            }
+
+            const allOrdersTable = document.getElementById('admin-all-orders-table');
+            const adminOrdersSearch = document.getElementById('admin-orders-search');
+            if (allOrdersTable) {
+                allOrdersTable.innerHTML = '';
+                const searchVal = adminOrdersSearch ? adminOrdersSearch.value.toLowerCase().trim() : '';
+                const filteredOrders = state.orders.filter(o => o.id.toLowerCase().includes(searchVal) || o.customerName.toLowerCase().includes(searchVal));
+
+                if (filteredOrders.length === 0) {
+                    allOrdersTable.innerHTML = '<tr><td colspan="7" class="text-center text-slate-400 py-6">لا توجد فواتير أو طلبات مسجلة مطابقة للبحث</td></tr>';
+                } else {
+                    filteredOrders.forEach(o => {
+                        const isCancelled = o.status === 'cancelled';
+                        const isPo = o.type === 'po';
+                        allOrdersTable.innerHTML += `
+                            <tr class="border-b hover:bg-slate-50 ${isCancelled ? 'opacity-60 bg-amber-50/20' : ''}">
+                                <td class="p-3 font-bold text-gold">${o.id} ${isCancelled ? '<span class="text-rose-600 text-[9px]">(ملغية)</span>' : ''}</td>
+                                <td class="p-3"><span class="bg-slate-100 text-slate-700 text-[10px] px-2 py-0.5 rounded font-bold">${isPo ? 'طلب PO' : 'فاتورة محل'}</span></td>
+                                <td class="p-3 text-slate-500">${o.date || '-'}</td>
+                                <td class="p-3 font-black text-slate-900">${o.customerName}</td>
+                                <td class="p-3 font-black text-slate-800">${Math.round(o.total)} EGP</td>
+                                <td class="p-3">
+                                    <span class="${isCancelled ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'} text-[10px] px-2.5 py-0.5 rounded font-bold">
+                                        ${isCancelled ? 'ملغية' : 'مكتملة'}
+                                    </span>
+                                </td>
+                                <td class="p-3 text-left space-x-1 space-x-reverse">
+                                    <button onclick="openOrderDetails('${o.firebaseId}')" class="bg-slate-800 hover:bg-slate-900 text-white px-3 py-1 rounded-xl font-bold transition-all">معاينة</button>
+                                    <button onclick="previewDirectOrderAsImage('${o.firebaseId}')" class="bg-gold hover:bg-[#b08b49] text-white px-2.5 py-1 rounded-xl font-bold transition-all">صورة</button>
+                                </td>
+                            </tr>`;
+                    });
+                }
+            }
+        }
+
+        function openOrderDetails(firebaseId) {
+            const order = state.orders.find(o => o.firebaseId === firebaseId);
+            if (!order) return;
+            state.currentActiveModalOrder = order;
+
+            document.getElementById('modal-ord-id').innerText = order.id;
+            document.getElementById('modal-ord-cust-name').innerText = order.customerName;
+            document.getElementById('modal-ord-cust-phone').innerText = order.customerPhone;
+            document.getElementById('modal-ord-date').innerText = order.date;
+            document.getElementById('modal-ord-grand-total').innerText = Math.round(order.total) + ' EGP';
+
+            let subtotal = order.detailedItems.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            document.getElementById('modal-subtotal').innerText = subtotal + ' EGP';
+            document.getElementById('modal-discount').innerText = (order.discount || 0) + ' EGP';
+            document.getElementById('modal-shipping').innerText = ((order.shipping || 0) + (order.packaging || 0)) + ' EGP';
+
+            const statusTextEl = document.getElementById('modal-ord-status-text');
+            const cancelBtn = document.getElementById('cancel-order-btn');
+            const approvePoBtn = document.getElementById('approve-po-btn');
+
+            if (order.status === 'cancelled') {
+                statusTextEl.innerHTML = 'ملغية';
+                cancelBtn.classList.add('hidden');
+                approvePoBtn.classList.add('hidden');
+            } else if (order.type === 'po' && order.status === 'pending') {
+                statusTextEl.innerHTML = 'معلق PO';
+                cancelBtn.classList.add('hidden');
+                approvePoBtn.classList.remove('hidden');
+            } else {
+                statusTextEl.innerHTML = 'معتمد';
+                cancelBtn.classList.remove('hidden');
+                approvePoBtn.classList.add('hidden');
+            }
+
+            const itemsContainer = document.getElementById('modal-ord-items-list');
+            itemsContainer.innerHTML = '';
+            order.detailedItems.forEach(item => {
+                itemsContainer.innerHTML += `
+                    <tr class="border-b">
+                        <td class="py-2">${item.name}</td>
+                        <td class="text-center">${item.code || ''}</td>
+                        <td class="text-center">${item.qty}</td>
+                        <td class="text-right">${item.price * item.qty} EGP</td>
+                    </tr>`;
+            });
+            document.getElementById('order-details-modal').classList.remove('hidden');
+        }
+
+        async function approvePoOrder() {
+            const o = state.currentActiveModalOrder;
+            if (!o || o.status !== 'pending') return;
+            if (confirm(`هل أنت متأكد من اعتماد الطلب ${o.id} وخصم المخزون؟`)) {
+                o.detailedItems.forEach(item => {
+                    const prod = state.products.find(p => p.id === item.id || p.code === item.code);
+                    if (prod) {
+                        db.collection("products").doc(prod.id).update({ stock: Math.max(0, prod.stock - item.qty) });
+                    }
+                });
+                db.collection("orders").doc(o.firebaseId).update({ status: 'approved' }).then(() => {
+                    alert('تم اعتماد طلب الشراء بنجاح وخصم الكميات من المخزون!');
+                    closeOrderModal();
+                });
+            }
+        }
+
+        function cancelCurrentOrder() {
+            const o = state.currentActiveModalOrder;
+            if (!o || o.status === 'cancelled') return;
+            if (confirm('⚠️ تحذير: هل تريد إلغاء هذه الفاتورة وإرجاع الكميات للمخزون؟')) {
+                o.detailedItems.forEach(item => {
+                    const prod = state.products.find(p => p.id === item.id || p.code === item.code);
+                    if (prod) {
+                        db.collection("products").doc(prod.id).update({ stock: prod.stock + item.qty });
+                    }
+                });
+                db.collection("orders").doc(o.firebaseId).update({ status: 'cancelled' }).then(() => {
+                    alert('تم إلغاء الفاتورة وإرجاع المخزون بنجاح!');
+                    closeOrderModal();
+                });
+            }
+        }
+
+        function closeOrderModal() { document.getElementById('order-details-modal').classList.add('hidden'); }
+        function downloadCurrentModalOrderAsImage() {
+            if (!state.currentActiveModalOrder) return;
+            const o = state.currentActiveModalOrder;
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount || 0, o.packaging || 0, o.shipping || 0);
+        }
+
+        function previewDirectOrderAsImage(firebaseId) {
+            const o = state.orders.find(x => x.firebaseId === firebaseId);
+            if (!o) return;
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount || 0, o.packaging || 0, o.shipping || 0);
+        }
+
+        function increaseStock(id) {
+            const p = state.products.find(x => x.id === id);
+            if (p) db.collection("products").doc(id).update({ stock: p.stock + 1 });
+        }
+
+        function getNextUnifiedOrderId() {
+            let maxNum = 0;
+            state.orders.forEach(o => {
+                if (o.id) {
+                    const num = parseInt(o.id.replace(/[^0-9]/g, '')) || 0;
+                    if (num > maxNum) maxNum = num;
+                }
+            });
+            return maxNum + 1;
+        }
+
+        function previewPOSReceiptAsImageView() {
+            if (state.posCart.length === 0) return alert('برجاء إضافة أصناف للفاتورة أولاً!');
+            const custName = document.getElementById('cust-name').value.trim() || 'عميل نقدي';
+            const custPhone = document.getElementById('cust-phone').value.trim() || '-';
+            const discount = parseFloat(document.getElementById('pos-discount').value) || 0;
+            const packaging = parseFloat(document.getElementById('pos-packaging').value) || 0;
+            const shipping = parseFloat(document.getElementById('pos-shipping').value) || 0;
+            const total = Math.round(parseFloat(document.getElementById('pos-grand-total').innerText) || 0);
+            
+            generateReceiptPreviewImage(
+                state.posCart, 
+                custName, 
+                custPhone, 
+                total, 
+                'ORD-' + String(getNextUnifiedOrderId()).padStart(4, '0'), 
+                new Date().toLocaleDateString('en-GB'), 
+                discount, 
+                packaging, 
+                shipping
+            );
+        }
+
+        function checkoutPOS() {
+            if (state.posCart.length === 0) return alert('برجاء إضافة أصناف للفاتورة أولاً!');
+            const custName = document.getElementById('cust-name').value.trim();
+            const custPhone = document.getElementById('cust-phone').value.trim();
+            if (!custName || !custPhone) return alert('برجاء إدخال اسم العميل ورقم الهاتف!');
+
+            const customerDocId = 'cust_' + custPhone.replace(/\s+/g, '_');
+            const discount = parseFloat(document.getElementById('pos-discount').value) || 0;
+            const packaging = parseFloat(document.getElementById('pos-packaging').value) || 0;
+            const shipping = parseFloat(document.getElementById('pos-shipping').value) || 0;
+            const total = Math.round(parseFloat(document.getElementById('pos-grand-total').innerText) || 0);
+            const orderId = 'ORD-' + String(getNextUnifiedOrderId()).padStart(4, '0');
+            const dateStr = new Date().toLocaleDateString('en-GB');
+
+            state.posCart.forEach(item => {
+                const prod = state.products.find(p => p.id === item.id);
+                if (prod) {
+                    db.collection("products").doc(prod.id).update({ stock: Math.max(0, prod.stock - item.qty) });
+                }
+            });
+
+            db.collection("orders").add({
+                id: orderId,
+                type: 'pos',
+                date: dateStr,
+                timestamp: Date.now(),
+                total,
+                discount,
+                packaging,
+                shipping,
+                customerName: custName,
+                customerPhone: custPhone,
+                status: 'active',
+                detailedItems: JSON.parse(JSON.stringify(state.posCart))
+            }).then(() => {
+                const customerRef = db.collection("customers").doc(customerDocId);
+                customerRef.get().then((docSnap) => {
+                    if (docSnap.exists) {
+                        customerRef.update({
+                            name: custName,
+                            ordersCount: (docSnap.data().ordersCount || 1) + 1,
+                            lastDate: dateStr
+                        });
+                    } else {
+                        customerRef.set({
+                            name: custName,
+                            phone: custPhone,
+                            ordersCount: 1,
+                            lastDate: dateStr,
+                            timestamp: Date.now(),
+                            isBlocked: false
+                        });
+                    }
+                });
+                alert('🎉 تمت عملية البيع وتسجيل الفاتورة بنجاح!');
+                clearPOSCart();
+                document.getElementById('cust-name').value = '';
+                document.getElementById('cust-phone').value = '';
+                document.getElementById('pos-discount').value = '0';
+                document.getElementById('pos-packaging').value = '0';
+                document.getElementById('pos-shipping').value = '0';
+            });
+        }
+
+        function generateReceiptPreviewImage(items, custName, custPhone, total, orderId, dateStr, discount, packaging, shipping) {
+            document.getElementById('rec-id').innerText = orderId;
+            document.getElementById('rec-date').innerText = dateStr;
+            document.getElementById('rec-cust-name').innerText = custName;
+            document.getElementById('rec-cust-phone').innerText = custPhone;
+            
+            let subtotal = 0;
+            const listContainer = document.getElementById('rec-items-list');
+            listContainer.innerHTML = '';
+            
+            items.forEach(i => {
+                subtotal += i.price * i.qty;
+                listContainer.innerHTML += `
+                    <tr>
+                        <td class="py-2">${i.name}</td>
+                        <td class="text-center">${i.code || ''}</td>
+                        <td class="text-center">${i.qty}</td>
+                        <td class="text-right">${i.price * i.qty} EGP</td>
+                    </tr>`;
+            });
+            
+            document.getElementById('rec-subtotal').innerText = subtotal + ' EGP';
+            document.getElementById('rec-discount').innerText = discount + ' EGP';
+            document.getElementById('rec-shipping').innerText = (packaging + shipping) + ' EGP';
+            document.getElementById('rec-grand-total').innerText = total + ' EGP';
+
+            const receiptEl = document.getElementById('printable-receipt');
+            receiptEl.classList.remove('hidden');
+            
+            html2canvas(receiptEl, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+                receiptEl.classList.add('hidden');
+                const imgDataUrl = canvas.toDataURL('image/png');
+                document.getElementById('preview-img-result').src = imgDataUrl;
+                document.getElementById('btn-actual-download').onclick = () => {
+                    const link = document.createElement('a');
+                    link.download = `Invoice-${orderId}.png`;
+                    link.href = imgDataUrl;
+                    link.click();
+                };
+                document.getElementById('receipt-image-preview-modal').classList.remove('hidden');
+            });
+        }
+
+        function closeReceiptImagePreview() { document.getElementById('receipt-image-preview-modal').classList.add('hidden'); }
+        function requestAdminAccess() { document.getElementById('admin-pin-modal').classList.remove('hidden'); }
+        function closePinModal() { document.getElementById('admin-pin-modal').classList.add('hidden'); }
+        function verifyAdminPin() {
+            if (document.getElementById('admin-pin-input').value.trim() === ADMIN_PIN) {
+                closePinModal();
+                switchTab('admin');
+            } else {
+                document.getElementById('pin-error-msg').classList.remove('hidden');
+            }
+        }
+
+        function openAddProductModal() {
+            document.getElementById('modal-title').innerText = 'إضافة هدية جديدة';
+            document.getElementById('edit-prod-id').value = '';
+            let maxCode = 0;
+            state.products.forEach(p => {
+                if (p.code && p.code.startsWith('G-')) {
+                    const num = parseInt(p.code.replace('G-', '')) || 0;
+                    if (num > maxCode) maxCode = num;
+                }
+            });
+            document.getElementById('prod-code').value = 'G-' + String(maxCode + 1).padStart(3, '0');
+            document.getElementById('prod-name').value = '';
+            document.getElementById('prod-cost').value = '';
+            document.getElementById('prod-price').value = '';
+            document.getElementById('prod-stock').value = '100';
+            document.getElementById('prod-img-file').value = '';
+            populateCategoryDropdown();
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function openEditProductModal(id) {
+            const p = state.products.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('modal-title').innerText = 'تعديل الهدية';
+            document.getElementById('edit-prod-id').value = p.id;
+            document.getElementById('prod-code').value = p.code || '';
+            document.getElementById('prod-name').value = p.name;
+            document.getElementById('prod-cost').value = p.cost || 0;
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-stock').value = p.stock;
+            populateCategoryDropdown();
+            document.getElementById('prod-category').value = p.category;
+            document.getElementById('prod-img-file').value = '';
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
+
+        function saveProductData() {
+            const editId = document.getElementById('edit-prod-id').value;
+            const code = document.getElementById('prod-code').value.trim();
+            const name = document.getElementById('prod-name').value.trim();
+            const cost = parseFloat(document.getElementById('prod-cost').value) || 0;
+            const price = parseFloat(document.getElementById('prod-price').value);
+            const stock = parseInt(document.getElementById('prod-stock').value) || 100;
+            const category = document.getElementById('prod-category').value;
+            const fileInput = document.getElementById('prod-img-file');
+
+            if (!name || isNaN(price)) return alert('برجاء أدخل اسم الهدية وسعر البيع!');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    processProductSave(editId, { code, name, cost, price, stock, category, image: e.target.result });
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                let existingImage = "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500&q=80";
+                if (editId) {
+                    const oldProd = state.products.find(x => x.id === editId);
+                    if (oldProd) existingImage = oldProd.image;
+                }
+                processProductSave(editId, { code, name, cost, price, stock, category, image: existingImage });
+            }
+        }
+
+        function processProductSave(editId, prodData) {
+            if (editId) {
+                db.collection("products").doc(editId).update(prodData).then(() => {
+                    alert('تم تحديث بيانات الهدية بنجاح!');
+                    closeProductModal();
+                });
+            } else {
+                db.collection("products").doc('p' + Date.now()).set(prodData).then(() => {
+                    alert('تمت إضافة الهدية للمخزون بنجاح!');
+                    closeProductModal();
+                });
+            }
+        }
+
+        function deleteProd(id) {
+            if (confirm('⚠️ هل أنت متأكد من حذف هذه الهدية نهائياً من المخزون؟')) {
+                db.collection("products").doc(id).delete();
+            }
+        }
+
+        function switchTab(tab) {
+            ['gifts', 'pos', 'po', 'customers', 'inventory', 'admin'].forEach(t => {
+                const tabEl = document.getElementById('tab-' + t);
+                const navEl = document.getElementById('nav-' + t);
+                if (tabEl) tabEl.classList.add('hidden');
+                if (navEl) {
+                    navEl.classList.remove('text-gold');
+                    navEl.classList.add('text-slate-400');
+                }
+            });
+            const activeTab = document.getElementById('tab-' + tab);
+            const activeNav = document.getElementById('nav-' + tab);
+            if (activeTab) activeTab.classList.remove('hidden');
+            if (activeNav) {
+                activeNav.classList.remove('text-slate-400');
+                activeNav.classList.add('text-gold');
+            }
+            if (tab === 'po') renderPoOrdersTable();
+            if (tab === 'gifts') renderGiftsPage();
+            if (tab === 'inventory') renderInventoryView();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
