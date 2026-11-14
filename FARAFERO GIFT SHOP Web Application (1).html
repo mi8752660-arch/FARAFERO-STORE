@@ -673,13 +673,18 @@
                     <select id="prod-category" class="w-full border p-2.5 rounded-xl bg-slate-50 font-bold text-slate-800"></select>
                 </div>
                 <div>
-                    <label class="text-slate-600 block mb-1">صورة الهدية (رابط أو رفع من الموبايل):</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="prod-image" placeholder="https://..." class="w-full border p-2.5 rounded-xl text-xs font-semibold">
+                    <label class="text-slate-600 block mb-1">صورة الهدية (رفع من الموبايل أو رابط):</label>
+                    <div class="flex gap-2 items-center">
+                        <input type="text" id="prod-image" placeholder="رابط الصورة أو سيتم إضافتها أوتوماتيك..." class="w-full border p-2 rounded-xl text-[11px] bg-slate-50 font-semibold" readonly>
                         <input type="file" id="prod-file-input" accept="image/*" onchange="handleMobileImageUpload(event)" class="hidden">
-                        <button type="button" onclick="document.getElementById('prod-file-input').click()" class="bg-slate-800 hover:bg-slate-900 text-white px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm flex items-center">
-                            <i class="fa-solid fa-upload ml-1"></i> رفع صورة
+                        <button type="button" onclick="document.getElementById('prod-file-input').click()" class="bg-[#C5A059] hover:bg-[#b08b49] text-white px-3.5 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap shadow-md flex items-center">
+                            <i class="fa-solid fa-cloud-arrow-up ml-1"></i> اختر صورة
                         </button>
+                    </div>
+                    <!-- معاينة الصورة المصغرة المرفوعة -->
+                    <div id="image-preview-container" class="mt-2 hidden flex items-center gap-2 bg-amber-50/60 p-2 rounded-xl border border-amber-200">
+                        <img id="prod-thumb-preview" src="" class="w-12 h-12 rounded-lg object-cover shadow-sm">
+                        <span class="text-[11px] font-bold text-emerald-700">✓ تم تحميل وضغط الصورة بنجاح جاهزة للحفظ</span>
                     </div>
                 </div>
             </div>
@@ -855,7 +860,7 @@
             startDataListeners();
         }
 
-        // دالة رفع وصغط الصورة من الموبايل لمنع تعليق النظام
+        // دالة رفع وضغط آمن جداً ومضبوط لمنع تجاوز حدود قاعدة البيانات
         function handleMobileImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -870,8 +875,9 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 600;
-                    const MAX_HEIGHT = 600;
+                    // تقليل الأبعاد والجودة لضمان ألا تتجاوز الصورة حجم قاعدة البيانات مطلقاً
+                    const MAX_WIDTH = 400;
+                    const MAX_HEIGHT = 400;
                     let width = img.width;
                     let height = img.height;
 
@@ -892,8 +898,12 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
+                    
+                    // وضع النتيجة في حقل الرابط ومعاينة الصورة المصغرة
                     document.getElementById('prod-image').value = compressedDataUrl;
+                    document.getElementById('prod-thumb-preview').src = compressedDataUrl;
+                    document.getElementById('image-preview-container').classList.remove('hidden');
                 };
                 img.src = e.target.result;
             };
@@ -1764,6 +1774,7 @@
             document.getElementById('prod-stock').value = '100';
             document.getElementById('prod-image').value = '';
             document.getElementById('prod-file-input').value = '';
+            document.getElementById('image-preview-container').classList.add('hidden');
             populateCategoryDropdown();
             document.getElementById('product-modal').classList.remove('hidden');
         }
@@ -1782,6 +1793,14 @@
             document.getElementById('prod-category').value = p.category;
             document.getElementById('prod-image').value = p.image;
             document.getElementById('prod-file-input').value = '';
+            
+            if (p.image) {
+                document.getElementById('prod-thumb-preview').src = p.image;
+                document.getElementById('image-preview-container').classList.remove('hidden');
+            } else {
+                document.getElementById('image-preview-container').classList.add('hidden');
+            }
+
             document.getElementById('product-modal').classList.remove('hidden');
         }
 
@@ -1804,13 +1823,21 @@
             const prodData = { code, name, cost, price, stock, category, image };
 
             if (editId) {
-                db.collection("products").doc(editId).update(prodData);
+                db.collection("products").doc(editId).update(prodData).then(() => {
+                    alert('تم تحديث الهدية بنجاح!');
+                    closeProductModal();
+                }).catch(err => {
+                    alert('خطأ في الحفظ: ربما حجم الصورة كبير جداً، اختر صورة أصغر.');
+                });
             } else {
                 const newId = 'p' + Date.now();
-                db.collection("products").doc(newId).set(prodData);
+                db.collection("products").doc(newId).set(prodData).then(() => {
+                    alert('تم إضافة الهدية بنجاح!');
+                    closeProductModal();
+                }).catch(err => {
+                    alert('خطأ في الحفظ: ربما حجم الصورة كبير جداً، اختر صورة أصغر.');
+                });
             }
-
-            closeProductModal();
         }
 
         function deleteProd(id) {
