@@ -727,7 +727,7 @@
             </table>
         </div>
 
-        <!-- تفاصيل الخصم، التغليف، والشحن الثابتة -->
+        <!-- تفاصيل الخصم، التغليف، والشحن الثابتة تماماً -->
         <div class="pt-4 border-t border-slate-200 space-y-3">
             <div id="rec-totals-container" class="w-64 ml-auto space-y-2 text-[11px] text-right"></div>
             <div class="w-full border-t border-slate-300 pt-3 text-center">
@@ -1159,7 +1159,7 @@
             });
         }
 
-        // دالة موحدة لبناء الخانات الثابتة للإجماليات في الفاتورة
+        // دالة موحدة وثابتة تماماً لضمان ظهور الـ 5 خانات في أي فاتورة بدون استثناء
         function generateFixedTotalsHtml(subtotal, discount, packaging, shipping, total) {
             return `
                 <div class="flex justify-between text-slate-600">
@@ -1219,8 +1219,9 @@
             let pack = parseFloat(order.packaging) || 0;
             let ship = parseFloat(order.shipping) || 0;
 
-            if (order.total > (subtotal - disc + pack + ship) && pack === 0 && ship === 0) {
-                ship = order.total - (subtotal - disc);
+            const calcSub = subtotal - disc + pack;
+            if (order.total > calcSub && ship === 0) {
+                ship = order.total - calcSub;
             }
 
             document.getElementById('pos-modal-totals-container').innerHTML = generateFixedTotalsHtml(subtotal, disc, pack, ship, order.total);
@@ -1426,8 +1427,9 @@
             let pack = parseFloat(order.packaging) || 0;
             let ship = parseFloat(order.shipping) || 0;
 
-            if (order.total > (subtotal - disc + pack + ship) && pack === 0 && ship === 0) {
-                ship = order.total - (subtotal - disc);
+            const calcSub = subtotal - disc + pack;
+            if (order.total > calcSub && ship === 0) {
+                ship = order.total - calcSub;
             }
 
             document.getElementById('modal-totals-container').innerHTML = generateFixedTotalsHtml(subtotal, disc, pack, ship, order.total);
@@ -1592,8 +1594,9 @@
             packaging = parseFloat(packaging) || 0;
             shipping = parseFloat(shipping) || 0;
 
-            if (total > (subtotal - discount + packaging + shipping) && packaging === 0 && shipping === 0) {
-                shipping = total - (subtotal - discount);
+            const calcSub = subtotal - discount + packaging;
+            if (total > calcSub && shipping === 0) {
+                shipping = total - calcSub;
             }
 
             document.getElementById('rec-totals-container').innerHTML = generateFixedTotalsHtml(subtotal, discount, packaging, shipping, total);
