@@ -469,28 +469,7 @@
             </div>
 
             <div class="pt-4 border-t border-slate-200 space-y-3">
-                <div class="w-64 ml-auto space-y-2 text-[11px] text-right">
-                    <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Subtotal</span>
-                        <span class="font-bold" id="modal-ord-subtotal">0.00 EGP</span>
-                    </div>
-                    <div id="modal-ord-disc-row" class="flex justify-between text-rose-600" style="display: none;">
-                        <span class="text-slate-400">Discount</span>
-                        <span id="modal-ord-disc-val" class="font-bold">0.00 EGP</span>
-                    </div>
-                    <div id="modal-ord-pack-row" class="flex justify-between text-slate-600" style="display: none;">
-                        <span class="text-slate-400">Packing</span>
-                        <span id="modal-ord-pack-val" class="font-bold">0.00 EGP</span>
-                    </div>
-                    <div id="modal-ord-ship-row" class="flex justify-between text-slate-600" style="display: none;">
-                        <span class="text-slate-400">Delivery</span>
-                        <span id="modal-ord-ship-val" class="font-bold">0.00 EGP</span>
-                    </div>
-                    <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
-                        <span class="text-slate-800">Total</span>
-                        <span class="text-[#C5A059] text-base" id="modal-ord-grand-total">0.00 EGP</span>
-                    </div>
-                </div>
+                <div id="modal-totals-container" class="w-64 ml-auto space-y-2 text-[11px] text-right"></div>
                 <div class="w-full border-t border-slate-300 pt-3 text-center">
                     <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Farafero Gift Shop</p>
                 </div>
@@ -570,28 +549,7 @@
             </div>
 
             <div class="pt-4 border-t border-slate-200 space-y-3">
-                <div class="w-64 ml-auto space-y-2 text-[11px] text-right">
-                    <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Subtotal</span>
-                        <span class="font-bold" id="pos-modal-ord-subtotal">0.00 EGP</span>
-                    </div>
-                    <div id="pos-modal-ord-disc-row" class="flex justify-between text-rose-600" style="display: none;">
-                        <span class="text-slate-400">Discount</span>
-                        <span id="pos-modal-ord-disc-val" class="font-bold">0.00 EGP</span>
-                    </div>
-                    <div id="pos-modal-ord-pack-row" class="flex justify-between text-slate-600" style="display: none;">
-                        <span class="text-slate-400">Packing</span>
-                        <span id="pos-modal-ord-pack-val" class="font-bold">0.00 EGP</span>
-                    </div>
-                    <div id="pos-modal-ord-ship-row" class="flex justify-between text-slate-600" style="display: none;">
-                        <span class="text-slate-400">Delivery</span>
-                        <span id="pos-modal-ord-ship-val" class="font-bold">0.00 EGP</span>
-                    </div>
-                    <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
-                        <span class="text-slate-800">Total</span>
-                        <span class="text-[#C5A059] text-base" id="pos-modal-ord-grand-total">0.00 EGP</span>
-                    </div>
-                </div>
+                <div id="pos-modal-totals-container" class="w-64 ml-auto space-y-2 text-[11px] text-right"></div>
                 <div class="w-full border-t border-slate-300 pt-3 text-center">
                     <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Farafero Gift Shop</p>
                 </div>
@@ -769,30 +727,9 @@
             </table>
         </div>
 
-        <!-- تفاصيل الخصم، التغليف، والشحن داخل الفاتورة -->
+        <!-- تفاصيل الخصم، التغليف، والشحن الديناميكية -->
         <div class="pt-4 border-t border-slate-200 space-y-3">
-            <div class="w-64 ml-auto space-y-2 text-[11px] text-right">
-                <div class="flex justify-between text-slate-600">
-                    <span class="text-slate-400">Subtotal</span>
-                    <span class="font-bold" id="rec-subtotal">0.00 EGP</span>
-                </div>
-                <div id="rec-discount-row" class="flex justify-between text-rose-600" style="display: none;">
-                    <span class="text-slate-400">Discount</span>
-                    <span id="rec-discount-val" class="font-bold">0.00 EGP</span>
-                </div>
-                <div id="rec-packaging-row" class="flex justify-between text-slate-600" style="display: none;">
-                    <span class="text-slate-400">Packing</span>
-                    <span id="rec-packaging-val" class="font-bold">0.00 EGP</span>
-                </div>
-                <div id="rec-shipping-row" class="flex justify-between text-slate-600" style="display: none;">
-                    <span class="text-slate-400">Delivery</span>
-                    <span id="rec-shipping-val" class="font-bold">0.00 EGP</span>
-                </div>
-                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
-                    <span class="text-slate-800">Total</span>
-                    <span class="text-[#C5A059] text-base" id="rec-grand-total">0.00 EGP</span>
-                </div>
-            </div>
+            <div id="rec-totals-container" class="w-64 ml-auto space-y-2 text-[11px] text-right"></div>
             <div class="w-full border-t border-slate-300 pt-3 text-center">
                 <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Farafero Gift Shop</p>
             </div>
@@ -1231,7 +1168,6 @@
             document.getElementById('pos-modal-ord-cust-name').innerText = order.customerName;
             document.getElementById('pos-modal-ord-cust-phone').innerText = order.customerPhone;
             document.getElementById('pos-modal-ord-date').innerText = order.date;
-            document.getElementById('pos-modal-ord-grand-total').innerText = order.total.toFixed(2) + ' EGP';
 
             let subtotal = 0;
             const itemsContainer = document.getElementById('pos-modal-ord-items-list');
@@ -1253,8 +1189,6 @@
                 `;
             });
 
-            document.getElementById('pos-modal-ord-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
-
             let disc = parseFloat(order.discount) || 0;
             let pack = parseFloat(order.packaging) || 0;
             let ship = parseFloat(order.shipping) || 0;
@@ -1263,29 +1197,45 @@
                 ship = order.total - (subtotal - disc);
             }
 
-            const discRow = document.getElementById('pos-modal-ord-disc-row');
+            // بناء الإجماليات ديناميكياً داخل المودال
+            const totalsContainer = document.getElementById('pos-modal-totals-container');
+            let totalsHtml = `
+                <div class="flex justify-between text-slate-600">
+                    <span class="text-slate-400">Subtotal</span>
+                    <span class="font-bold">${subtotal.toFixed(2)} EGP</span>
+                </div>
+            `;
             if (disc > 0) {
-                discRow.style.display = 'flex';
-                document.getElementById('pos-modal-ord-disc-val').innerText = `${disc.toFixed(2)} EGP`;
-            } else {
-                discRow.style.display = 'none';
+                totalsHtml += `
+                    <div class="flex justify-between text-rose-600">
+                        <span class="text-slate-400">Discount</span>
+                        <span class="font-bold">-${disc.toFixed(2)} EGP</span>
+                    </div>
+                `;
             }
-
-            const packRow = document.getElementById('pos-modal-ord-pack-row');
             if (pack > 0) {
-                packRow.style.display = 'flex';
-                document.getElementById('pos-modal-ord-pack-val').innerText = `${pack.toFixed(2)} EGP`;
-            } else {
-                packRow.style.display = 'none';
+                totalsHtml += `
+                    <div class="flex justify-between text-slate-600">
+                        <span class="text-slate-400">Packing</span>
+                        <span class="font-bold">${pack.toFixed(2)} EGP</span>
+                    </div>
+                `;
             }
-
-            const shipRow = document.getElementById('pos-modal-ord-ship-row');
             if (ship > 0) {
-                shipRow.style.display = 'flex';
-                document.getElementById('pos-modal-ord-ship-val').innerText = `${ship.toFixed(2)} EGP`;
-            } else {
-                shipRow.style.display = 'none';
+                totalsHtml += `
+                    <div class="flex justify-between text-slate-600">
+                        <span class="text-slate-400">Delivery</span>
+                        <span class="font-bold">${ship.toFixed(2)} EGP</span>
+                    </div>
+                `;
             }
+            totalsHtml += `
+                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
+                    <span class="text-slate-800">Total</span>
+                    <span class="text-[#C5A059] text-base">${order.total.toFixed(2)} EGP</span>
+                </div>
+            `;
+            totalsContainer.innerHTML = totalsHtml;
 
             document.getElementById('pos-order-details-modal').classList.remove('hidden');
         }
@@ -1453,7 +1403,6 @@
             document.getElementById('modal-ord-cust-name').innerText = order.customerName;
             document.getElementById('modal-ord-cust-phone').innerText = order.customerPhone;
             document.getElementById('modal-ord-date').innerText = order.date;
-            document.getElementById('modal-ord-grand-total').innerText = order.total.toFixed(2) + ' EGP';
 
             const statusTextEl = document.getElementById('modal-ord-status-text');
             const cancelBtn = document.getElementById('cancel-order-btn');
@@ -1486,8 +1435,6 @@
                 `;
             });
 
-            document.getElementById('modal-ord-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
-
             let disc = parseFloat(order.discount) || 0;
             let pack = parseFloat(order.packaging) || 0;
             let ship = parseFloat(order.shipping) || 0;
@@ -1496,29 +1443,44 @@
                 ship = order.total - (subtotal - disc);
             }
 
-            const discRow = document.getElementById('modal-ord-disc-row');
+            const totalsContainer = document.getElementById('modal-totals-container');
+            let totalsHtml = `
+                <div class="flex justify-between text-slate-600">
+                    <span class="text-slate-400">Subtotal</span>
+                    <span class="font-bold">${subtotal.toFixed(2)} EGP</span>
+                </div>
+            `;
             if (disc > 0) {
-                discRow.style.display = 'flex';
-                document.getElementById('modal-ord-disc-val').innerText = `${disc.toFixed(2)} EGP`;
-            } else {
-                discRow.style.display = 'none';
+                totalsHtml += `
+                    <div class="flex justify-between text-rose-600">
+                        <span class="text-slate-400">Discount</span>
+                        <span class="font-bold">-${disc.toFixed(2)} EGP</span>
+                    </div>
+                `;
             }
-
-            const packRow = document.getElementById('modal-ord-pack-row');
             if (pack > 0) {
-                packRow.style.display = 'flex';
-                document.getElementById('modal-ord-pack-val').innerText = `${pack.toFixed(2)} EGP`;
-            } else {
-                packRow.style.display = 'none';
+                totalsHtml += `
+                    <div class="flex justify-between text-slate-600">
+                        <span class="text-slate-400">Packing</span>
+                        <span class="font-bold">${pack.toFixed(2)} EGP</span>
+                    </div>
+                `;
             }
-
-            const shipRow = document.getElementById('modal-ord-ship-row');
             if (ship > 0) {
-                shipRow.style.display = 'flex';
-                document.getElementById('modal-ord-ship-val').innerText = `${ship.toFixed(2)} EGP`;
-            } else {
-                shipRow.style.display = 'none';
+                totalsHtml += `
+                    <div class="flex justify-between text-slate-600">
+                        <span class="text-slate-400">Delivery</span>
+                        <span class="font-bold">${ship.toFixed(2)} EGP</span>
+                    </div>
+                `;
             }
+            totalsHtml += `
+                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
+                    <span class="text-slate-800">Total</span>
+                    <span class="text-[#C5A059] text-base">${order.total.toFixed(2)} EGP</span>
+                </div>
+            `;
+            totalsContainer.innerHTML = totalsHtml;
 
             document.getElementById('order-details-modal').classList.remove('hidden');
         }
@@ -1677,8 +1639,6 @@
                 `;
             });
 
-            document.getElementById('rec-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
-
             discount = parseFloat(discount) || 0;
             packaging = parseFloat(packaging) || 0;
             shipping = parseFloat(shipping) || 0;
@@ -1687,36 +1647,49 @@
                 shipping = total - (subtotal - discount);
             }
 
-            const discRow = document.getElementById('rec-discount-row');
+            // بناء الإجماليات ديناميكياً لكي يتم التقاطها بنسبة 100% في الصورة
+            const totalsContainer = document.getElementById('rec-totals-container');
+            let totalsHtml = `
+                <div class="flex justify-between text-slate-600">
+                    <span class="text-slate-400">Subtotal</span>
+                    <span class="font-bold">${subtotal.toFixed(2)} EGP</span>
+                </div>
+            `;
             if (discount > 0) {
-                discRow.style.display = 'flex';
-                document.getElementById('rec-discount-val').innerText = `${discount.toFixed(2)} EGP`;
-            } else {
-                discRow.style.display = 'none';
+                totalsHtml += `
+                    <div class="flex justify-between text-rose-600">
+                        <span class="text-slate-400">Discount</span>
+                        <span class="font-bold">-${discount.toFixed(2)} EGP</span>
+                    </div>
+                `;
             }
-
-            const packRow = document.getElementById('rec-packaging-row');
             if (packaging > 0) {
-                packRow.style.display = 'flex';
-                document.getElementById('rec-packaging-val').innerText = `${packaging.toFixed(2)} EGP`;
-            } else {
-                packRow.style.display = 'none';
+                totalsHtml += `
+                    <div class="flex justify-between text-slate-600">
+                        <span class="text-slate-400">Packing</span>
+                        <span class="font-bold">${packaging.toFixed(2)} EGP</span>
+                    </div>
+                `;
             }
-
-            const shipRow = document.getElementById('rec-shipping-row');
             if (shipping > 0) {
-                shipRow.style.display = 'flex';
-                document.getElementById('rec-shipping-val').innerText = `${shipping.toFixed(2)} EGP`;
-            } else {
-                shipRow.style.display = 'none';
+                totalsHtml += `
+                    <div class="flex justify-between text-slate-600">
+                        <span class="text-slate-400">Delivery</span>
+                        <span class="font-bold">${shipping.toFixed(2)} EGP</span>
+                    </div>
+                `;
             }
-
-            document.getElementById('rec-grand-total').innerText = total.toFixed(2) + ' EGP';
+            totalsHtml += `
+                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
+                    <span class="text-slate-800">Total</span>
+                    <span class="text-[#C5A059] text-base">${total.toFixed(2)} EGP</span>
+                </div>
+            `;
+            totalsContainer.innerHTML = totalsHtml;
 
             const receiptEl = document.getElementById('printable-receipt');
             receiptEl.classList.remove('hidden');
 
-            // مهلة زمنية قصيرة لضمان تحديث عرض المتصفح لصفوف الشحن والتغليف قبل التقاط الصورة
             setTimeout(() => {
                 html2canvas(receiptEl, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
                     receiptEl.classList.add('hidden');
@@ -1737,7 +1710,7 @@
                     receiptEl.classList.add('hidden');
                     alert('حدث خطأ أثناء معاينة الفاتورة.');
                 });
-            }, 100);
+            }, 200);
         }
 
         function closeReceiptImagePreview() {
