@@ -860,8 +860,8 @@
             startDataListeners();
         }
 
-        // دالة آمنة وخفيفة جداً لضغط الصور من الموبايل بدون أي تهنيج للأبد
-        async function handleMobileImageUpload(event) {
+        // الحل النهائي الجذري: استخدام ObjectURL لمنع تهنيج الموبايل نهائياً مع الصور الكبيرة جداً
+        function handleMobileImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
@@ -870,47 +870,46 @@
                 return;
             }
 
-            try {
-                // معالجة سريعة وخفيفة في الخلفية تمنع تهنيج الموبايل نهائياً
-                const bitmap = await createImageBitmap(file, { resizeWidth: 250, resizeHeight: 250, resizeQuality: 'low' });
+            const objectUrl = URL.createObjectURL(file);
+            const img = new Image();
+
+            img.onload = function() {
+                URL.revokeObjectURL(objectUrl); // تنظيف الرابط المؤقت
+
                 const canvas = document.createElement('canvas');
-                canvas.width = bitmap.width;
-                canvas.height = bitmap.height;
+                let width = img.width;
+                let height = img.height;
+                const MAX_SIZE = 300; // حجم آمن تماماً وصغير لضمان عدم تجاوز حدود قاعدة البيانات
+
+                if (width > height) {
+                    if (width > MAX_SIZE) {
+                        height *= MAX_SIZE / width;
+                        width = MAX_SIZE;
+                    }
+                } else {
+                    if (height > MAX_SIZE) {
+                        width *= MAX_SIZE / height;
+                        height = MAX_SIZE;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(bitmap, 0, 0);
+                ctx.drawImage(img, 0, 0, width, height);
 
                 const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
                 document.getElementById('prod-image').value = compressedDataUrl;
                 document.getElementById('prod-thumb-preview').src = compressedDataUrl;
                 document.getElementById('image-preview-container').classList.remove('hidden');
-            } catch (err) {
-                // الطريقة البديلة الآمنة في حال المتصفحات القديمة
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        const MAX = 250;
-                        if (width > height) {
-                            if (width > MAX) { height *= MAX / width; width = MAX; }
-                        } else {
-                            if (height > MAX) { width *= MAX / height; height = MAX; }
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
-                        document.getElementById('prod-image').value = compressedDataUrl;
-                        document.getElementById('prod-thumb-preview').src = compressedDataUrl;
-                        document.getElementById('image-preview-container').classList.remove('hidden');
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
+            };
+
+            img.onerror = function() {
+                URL.revokeObjectURL(objectUrl);
+                alert('عذراً، حدث خطأ أثناء قراءة الصورة. جرب اختيار صورة أخرى.');
+            };
+
+            img.src = objectUrl;
         }
 
         function startDataListeners() {
