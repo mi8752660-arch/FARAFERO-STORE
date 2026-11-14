@@ -101,7 +101,6 @@
                         <h3 class="text-xl font-black text-slate-900 flex items-center">
                             <i class="fa-solid fa-gift text-gold ml-2"></i> معرض وقائمة الهدايا
                         </h3>
-                        <p class="text-xs text-slate-500 mt-1">تصفح الهدايا المتاحة والبحث السريع بالأكواد والأسماء</p>
                     </div>
                 </div>
                 <div class="bg-slate-50 p-3 rounded-2xl border flex items-center space-x-3 space-x-reverse">
@@ -122,13 +121,12 @@
                         <h3 class="text-xl font-black text-slate-900 flex items-center">
                             <i class="fa-solid fa-boxes-packing text-gold ml-2"></i> الهدايا المتاحة في المحل
                         </h3>
-                        <span class="text-xs font-bold bg-slate-100 px-3 py-1 rounded-xl">اضغط لإضافة صنف</span>
                     </div>
                     <input type="text" id="pos-search" oninput="renderPOSProducts()" placeholder="ابحث عن هدية أو كود..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:border-gold">
                     <div id="pos-product-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[520px] overflow-y-auto custom-scrollbar p-1"></div>
                 </div>
 
-                <!-- فاتورة العميل (مع خانة الخصم ومصاريف الشحن) -->
+                <!-- فاتورة العميل (مع خانات الخصم والتغليف والشحن) -->
                 <div class="lg:col-span-5 space-y-6">
                     <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-lg flex flex-col justify-between space-y-4">
                         <div class="space-y-3">
@@ -209,7 +207,7 @@
                 <div class="flex justify-between items-center border-b pb-3">
                     <div>
                         <h3 class="text-xl font-black text-slate-900">طلبات الشراء الأونلاين (PO)</h3>
-                        <p class="text-xs text-slate-500 mt-1">قائمة بطلبات الشراء الواردة من موقع العملاء مرتبة بشكل تسلسلي</p>
+                        <p class="text-xs text-slate-500 mt-1">قائمة بطلبات الشراء الواردة من موقع العملاء مرتبة بشكل تسلسلي ومنظم</p>
                     </div>
                     <span class="bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-amber-200">قسم المعلقة</span>
                 </div>
@@ -292,7 +290,7 @@
             </div>
         </div>
 
-        <!-- TAB 5: ADMIN / DASHBOARD (مع سجل فواتير المحل والمبيعات تحت خالص) -->
+        <!-- TAB 5: ADMIN / DASHBOARD (تتضمن سجل الفواتير والمبيعات بالكامل تحت خالص) -->
         <div id="tab-admin" class="app-tab hidden space-y-6">
             <div class="flex justify-between items-center bg-amber-50 border border-amber-200 p-4 rounded-2xl">
                 <div class="flex items-center space-x-2 space-x-reverse">
@@ -370,6 +368,33 @@
                         <p class="text-xs text-slate-500">اضغط على أي فاتورة لمعاينتها أو إلغائها</p>
                     </div>
                     <div id="recent-orders-list" class="space-y-3 max-h-[350px] overflow-y-auto custom-scrollbar"></div>
+                </div>
+            </div>
+
+            <!-- سجل فواتير المحل والمبيعات (تحت خالص في لوحة المدير) -->
+            <div class="bg-white rounded-3xl p-6 border shadow-sm space-y-4">
+                <div class="border-b pb-3 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-black text-slate-900 flex items-center">
+                            <i class="fa-solid fa-receipt text-gold ml-2"></i> سجل فواتير المحل والمبيعات (قسم الإدارة الكامل)
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-1">عرض ومتابعة كافة العمليات والطلبات المتسلسلة والمبيعات المعتمدة</p>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs">
+                        <thead class="bg-slate-50 text-slate-500 font-bold border-b">
+                            <tr>
+                                <th class="p-3">رقم الفاتورة / المرجع</th>
+                                <th class="p-3">التاريخ</th>
+                                <th class="p-3">اسم العميل</th>
+                                <th class="p-3">الإجمالي النهائي</th>
+                                <th class="p-3">الحالة</th>
+                                <th class="p-3 text-left">الإجراءات والتحكم</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-all-orders-table" class="divide-y font-medium"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -471,7 +496,7 @@
             <button onclick="closeImageZoom()" class="absolute top-4 left-4 w-9 h-9 rounded-full bg-slate-100 font-bold">✕</button>
             <h4 id="zoom-img-title" class="font-black text-base text-slate-900 mb-3"></h4>
             <div class="max-h-[70vh] overflow-hidden rounded-2xl bg-slate-100 flex items-center justify-center p-2">
-                <img id="zoom-img-src" src="" class="max-h-[65vh] w-auto object-contain rounded-xl">
+                <img id="zoom-img-src" src="" class="max-h-[65vh] w-auto object-contain">
             </div>
         </div>
     </div>
@@ -551,7 +576,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT ENGINE (Optimized & Fast) -->
+    <!-- SCRIPT ENGINE -->
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyAuP10QxT-N1gEo7nW6Zc9I1Nzg9ehdD6E",
@@ -563,9 +588,7 @@
           measurementId: "G-Q736FT0ZH5"
         };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.firestore();
 
         const ADMIN_PIN = "2580";
@@ -573,17 +596,12 @@
 
         let state = { products: [], orders: [], customers: [], categories: ["دباديب", "ورد", "هدايا استانلس", "شنط حريمى"], posCart: [], currentActiveModalOrder: null };
 
-        function initApp() {
-            startDataListeners();
-        }
+        function initApp() { startDataListeners(); }
 
         function startDataListeners() {
             db.collection("settings").doc("categories").onSnapshot((doc) => {
-                if (doc.exists && doc.data().list) {
-                    state.categories = doc.data().list;
-                } else {
-                    db.collection("settings").doc("categories").set({ list: state.categories });
-                }
+                if (doc.exists && doc.data().list) { state.categories = doc.data().list; }
+                else { db.collection("settings").doc("categories").set({ list: state.categories }); }
                 renderAll();
             });
 
@@ -596,7 +614,7 @@
             db.collection("orders").onSnapshot((snapshot) => {
                 state.orders = [];
                 snapshot.forEach((doc) => { state.orders.push({ firebaseId: doc.id, ...doc.data() }); });
-                // ترتيب تسلسلي للأوردات والـ PO بدقة
+                // ترتيب تصاعدي أو تسلسلي دقيق حسب تاريخ الإضافة أو رقم المرجع
                 state.orders.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
                 renderAll();
             });
@@ -927,11 +945,11 @@
                 });
             }
 
-            // إظهار سجل الفواتير والمبيعات في لوحة الـ manger تحت خالص
+            // القسم الجانبي الأيمن المصغر للOrders
             const recentList = document.getElementById('recent-orders-list');
             if (recentList) {
                 recentList.innerHTML = '';
-                state.orders.forEach(o => {
+                state.orders.slice(0, 5).forEach(o => {
                     recentList.innerHTML += `
                         <div class="bg-slate-50 border p-3 rounded-2xl flex justify-between items-center text-xs">
                             <div>
@@ -941,6 +959,35 @@
                             <button onclick="openOrderDetails('${o.firebaseId}')" class="bg-slate-800 text-white px-3 py-1 rounded-xl font-bold">معاينة</button>
                         </div>`;
                 });
+            }
+
+            // سجل فواتير المحل والمبيعات تحت خالص (القسم الكامل للـ Manager)
+            const allOrdersTable = document.getElementById('admin-all-orders-table');
+            if (allOrdersTable) {
+                allOrdersTable.innerHTML = '';
+                if (state.orders.length === 0) {
+                    allOrdersTable.innerHTML = '<tr><td colspan="6" class="text-center text-slate-400 py-6">لا توجد فواتير أو طلبات مسجلة بعد</td></tr>';
+                } else {
+                    state.orders.forEach(o => {
+                        const isCancelled = o.status === 'cancelled';
+                        allOrdersTable.innerHTML += `
+                            <tr class="border-b hover:bg-slate-50 ${isCancelled ? 'opacity-60 bg-amber-50/20' : ''}">
+                                <td class="p-3 font-bold text-gold">${o.id} ${isCancelled ? '<span class="text-rose-600 text-[9px]">(ملغية)</span>' : ''}</td>
+                                <td class="p-3 text-slate-500">${o.date || '-'}</td>
+                                <td class="p-3 font-black">${o.customerName}</td>
+                                <td class="p-3 font-black text-slate-800">${Math.round(o.total)} EGP</td>
+                                <td class="p-3">
+                                    <span class="${isCancelled ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'} text-[10px] px-2.5 py-0.5 rounded font-bold">
+                                        ${isCancelled ? 'ملغية' : 'مكتملة'}
+                                    </span>
+                                </td>
+                                <td class="p-3 text-left space-x-1 space-x-reverse">
+                                    <button onclick="openOrderDetails('${o.firebaseId}')" class="bg-slate-800 text-white px-3 py-1 rounded-xl font-bold">معاينة</button>
+                                    <button onclick="previewDirectOrderAsImage('${o.firebaseId}')" class="bg-gold text-white px-2.5 py-1 rounded-xl font-bold">صورة</button>
+                                </td>
+                            </tr>`;
+                    });
+                }
             }
         }
 
