@@ -87,7 +87,7 @@
         </div>
     </header>
 
-    <!-- NAVIGATION BAR (تم حذف الأكثر مبيعا لإعطاء مساحة مريحة لجميع الأزرار) -->
+    <!-- NAVIGATION BAR -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around shadow-2xl z-50 max-w-xl mx-auto md:max-w-7xl" dir="rtl">
         <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn text-xs font-bold text-[#C5A059] flex flex-col items-center flex-1 px-2 py-1 transition-all">
             <i class="fa-solid fa-gift text-base mb-1"></i> الهدايا
@@ -169,14 +169,10 @@
                                 <div id="pos-cart-items" class="divide-y max-h-[120px] overflow-y-auto my-1 text-xs bg-slate-50/50 p-2 rounded-xl border"></div>
                             </div>
 
-                            <div class="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-2xl border border-slate-100 text-xs">
+                            <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-2xl border border-slate-100 text-xs">
                                 <div>
                                     <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">Discount (-):</label>
                                     <input type="number" id="pos-discount" value="0" oninput="renderPOSCart()" class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 font-bold text-center focus:outline-none focus:border-[#C5A059]">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">Packing (+):</label>
-                                    <input type="number" id="pos-packaging" value="0" oninput="renderPOSCart()" class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 font-bold text-center focus:outline-none focus:border-[#C5A059]">
                                 </div>
                                 <div>
                                     <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">Delivery (+):</label>
@@ -477,10 +473,6 @@
                         <span class="text-slate-400">Discount</span>
                         <span id="modal-ord-disc-val" class="font-bold">0.00 EGP</span>
                     </div>
-                    <div id="modal-ord-pack-row" class="flex justify-between text-slate-600 hidden">
-                        <span class="text-slate-400">Packing</span>
-                        <span id="modal-ord-pack-val" class="font-bold">0.00 EGP</span>
-                    </div>
                     <div id="modal-ord-ship-row" class="flex justify-between text-slate-600 hidden">
                         <span class="text-slate-400">Delivery</span>
                         <span id="modal-ord-ship-val" class="font-bold">0.00 EGP</span>
@@ -577,10 +569,6 @@
                     <div id="pos-modal-ord-disc-row" class="flex justify-between text-rose-600 hidden">
                         <span class="text-slate-400">Discount</span>
                         <span id="pos-modal-ord-disc-val" class="font-bold">0.00 EGP</span>
-                    </div>
-                    <div id="pos-modal-ord-pack-row" class="flex justify-between text-slate-600 hidden">
-                        <span class="text-slate-400">Packing</span>
-                        <span id="pos-modal-ord-pack-val" class="font-bold">0.00 EGP</span>
                     </div>
                     <div id="pos-modal-ord-ship-row" class="flex justify-between text-slate-600 hidden">
                         <span class="text-slate-400">Delivery</span>
@@ -697,7 +685,7 @@
         </div>
     </div>
 
-    <!-- PRINTABLE RECEIPT TEMPLATE (الشكل المخفي للرسم) -->
+    <!-- PRINTABLE RECEIPT TEMPLATE -->
     <div id="printable-receipt" class="hidden max-w-2xl mx-auto p-8 bg-white text-xs space-y-6" dir="ltr">
         <div class="flex justify-between items-start border-b border-slate-300 pb-5">
             <div class="space-y-1">
@@ -767,10 +755,6 @@
                     <span class="text-slate-400">Discount</span>
                     <span id="rec-discount-val" class="font-bold">0.00 EGP</span>
                 </div>
-                <div id="rec-packaging-row" class="flex justify-between text-slate-600 hidden">
-                    <span class="text-slate-400">Packing</span>
-                    <span id="rec-packaging-val" class="font-bold">0.00 EGP</span>
-                </div>
                 <div id="rec-shipping-row" class="flex justify-between text-slate-600 hidden">
                     <span class="text-slate-400">Delivery</span>
                     <span id="rec-shipping-val" class="font-bold">0.00 EGP</span>
@@ -818,33 +802,6 @@
             openCategory: null 
         };
 
-        const defaultNewProducts = [
-            { id: "p1", code: "G-001", name: "دبدوب أحمر عملاق كلاسيك", category: "دباديب", cost: 250, price: 450, stock: 100, image: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?w=500&q=80" },
-            { id: "p2", code: "G-002", name: "دبدوب بنكي محبوك بشريطة", category: "دباديب", cost: 180, price: 320, stock: 100, image: "https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=500&q=80" },
-            { id: "p3", code: "G-003", name: "دبدوب أبيض قطيفة ناعم", category: "دباديب", cost: 200, price: 380, stock: 100, image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=500&q=80" },
-            { id: "p4", code: "G-004", name: "دبدوب بني فائق النعومة", category: "دباديب", cost: 220, price: 400, stock: 100, image: "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=500&q=80" },
-            { id: "p5", code: "G-005", name: "دبدوب رمادي مع قلادة قلب", category: "دباديب", cost: 190, price: 350, stock: 100, image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=500&q=80" },
-            { id: "p6", code: "G-006", name: "بوكيه ورد جوري أحمر طبيعي", category: "ورد", cost: 200, price: 380, stock: 100, image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=500&q=80" },
-            { id: "p7", code: "G-007", name: "بوكيه ورد توليب أبيض فاخر", category: "ورد", cost: 220, price: 420, stock: 100, image: "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=500&q=80" },
-            { id: "p8", code: "G-008", name: "باقة ورد زهرية مجمعة للمناسبات", category: "ورد", cost: 250, price: 450, stock: 100, image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=500&q=80" },
-            { id: "p9", code: "G-009", name: "صندوق ورد أصفر ملكي", category: "ورد", cost: 280, price: 500, stock: 100, image: "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=500&q=80" },
-            { id: "p10", code: "G-010", name: "بوكيه ورد جوري بنفشي فريد", category: "ورد", cost: 230, price: 430, stock: 100, image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80" },
-            { id: "p11", code: "G-011", name: "فازة ورد دوار الشمس المشرق", category: "ورد", cost: 180, price: 340, stock: 100, image: "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=500&q=80" },
-            { id: "p12", code: "G-012", name: "سلسلة استانلس فضي طلاء ثقيل", category: "هدايا استانلس", cost: 90, price: 180, stock: 100, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80" },
-            { id: "p13", code: "G-013", name: "سوار استانلس ذهبي مرصع بالفصوص", category: "هدايا استانلس", cost: 120, price: 230, stock: 100, image: "https://images.unsplash.com/photo-1611591475165-385fb9f7a5bd?w=500&q=80" },
-            { id: "p14", code: "G-014", name: "خاتم استانلس مطعم بحجر عقيق", category: "هدايا استانلس", cost: 70, price: 140, stock: 100, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500&q=80" },
-            { id: "p15", code: "G-015", name: "ميدالية مفاتيح استانلس محفورة", category: "هدايا استانلس", cost: 50, price: 110, stock: 100, image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&q=80" },
-            { id: "p16", code: "G-016", name: "خلخال استانلس ناعم أنيق", category: "هدايا استانلس", cost: 60, price: 130, stock: 100, image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&q=80" },
-            { id: "p17", code: "G-017", name: "حلق استانلس كوري عصري", category: "هدايا استانلس", cost: 80, price: 160, stock: 100, image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=500&q=80" },
-            { id: "p18", code: "G-018", name: "طقم استانلس (سلسلة + انسيال)", category: "هدايا استانلس", cost: 160, price: 300, stock: 100, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80" },
-            { id: "p19", code: "G-019", name: "شنطة يد جلد سوداء كلاسيك", category: "شنط حريمى", cost: 280, price: 520, stock: 100, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&q=80" },
-            { id: "p20", code: "G-020", name: "شنطة كروس جلد بني فاخرة", category: "شنط حريمى", cost: 240, price: 460, stock: 100, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500&q=80" },
-            { id: "p21", code: "G-021", name: "حقيبة سهرة بيج بأقفال ذهبية", category: "شنط حريمى", cost: 300, price: 580, stock: 100, image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=500&q=80" },
-            { id: "p22", code: "G-022", name: "شنطة حريمي حمراء أنيقة", category: "شنط حريمى", cost: 260, price: 490, stock: 100, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80" },
-            { id: "p23", code: "G-023", name: "حقيبة ظهر نسائية جلد ناعم", category: "شنط حريمى", cost: 270, price: 510, stock: 100, image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80" },
-            { id: "p24", code: "G-024", name: "كليتش حريمي مطرزة للسهرات", category: "شنط حريمى", cost: 210, price: 410, stock: 100, image: "https://images.unsplash.com/photo-1575032617751-6d3381e4b97d?w=500&q=80" }
-        ];
-
         function initApp() {
             startDataListeners();
         }
@@ -860,18 +817,11 @@
             });
 
             db.collection("products").onSnapshot((snapshot) => {
-                if (snapshot.empty) {
-                    db.collection("settings").doc("categories").set({ list: state.categories });
-                    defaultNewProducts.forEach(p => {
-                        db.collection("products").doc(p.id).set(p);
-                    });
-                } else {
-                    state.products = [];
-                    snapshot.forEach((doc) => {
-                        state.products.push({ id: doc.id, ...doc.data() });
-                    });
-                    renderAll();
-                }
+                state.products = [];
+                snapshot.forEach((doc) => {
+                    state.products.push({ id: doc.id, ...doc.data() });
+                });
+                renderAll();
             });
 
             db.collection("orders").onSnapshot((snapshot) => {
@@ -1218,14 +1168,6 @@
                 discRow.classList.add('hidden');
             }
 
-            const packRow = document.getElementById('pos-modal-ord-pack-row');
-            if (order.packaging > 0) {
-                packRow.classList.remove('hidden');
-                document.getElementById('pos-modal-ord-pack-val').innerText = `${order.packaging.toFixed(2)} EGP`;
-            } else {
-                packRow.classList.add('hidden');
-            }
-
             const shipRow = document.getElementById('pos-modal-ord-ship-row');
             if (order.shipping > 0) {
                 shipRow.classList.remove('hidden');
@@ -1244,13 +1186,13 @@
         function downloadPOSOrderAsImage() {
             if (!state.posActiveModalOrder) return;
             const o = state.posActiveModalOrder;
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.packaging, o.shipping);
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.shipping);
         }
 
         function previewDirectOrderAsImage(firebaseId) {
             const o = state.orders.find(x => x.firebaseId === firebaseId);
             if (!o) return;
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.packaging, o.shipping);
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.shipping);
         }
 
         function addToPOS(id) {
@@ -1273,7 +1215,6 @@
             document.getElementById('cust-name').value = '';
             document.getElementById('cust-phone').value = '';
             document.getElementById('pos-discount').value = 0;
-            document.getElementById('pos-packaging').value = 0;
             document.getElementById('pos-shipping').value = 0;
             renderPOSCart(); 
         }
@@ -1304,10 +1245,9 @@
             }
 
             const discount = parseFloat(document.getElementById('pos-discount').value) || 0;
-            const packaging = parseFloat(document.getElementById('pos-packaging').value) || 0;
             const shipping = parseFloat(document.getElementById('pos-shipping').value) || 0;
 
-            let grandTotal = subtotal - discount + packaging + shipping;
+            let grandTotal = subtotal - discount + shipping;
             if (grandTotal < 0) grandTotal = 0;
 
             document.getElementById('pos-grand-total').innerText = grandTotal;
@@ -1443,14 +1383,6 @@
                 discRow.classList.add('hidden');
             }
 
-            const packRow = document.getElementById('modal-ord-pack-row');
-            if (order.packaging > 0) {
-                packRow.classList.remove('hidden');
-                document.getElementById('modal-ord-pack-val').innerText = `${order.packaging.toFixed(2)} EGP`;
-            } else {
-                packRow.classList.add('hidden');
-            }
-
             const shipRow = document.getElementById('modal-ord-ship-row');
             if (order.shipping > 0) {
                 shipRow.classList.remove('hidden');
@@ -1489,7 +1421,7 @@
         function downloadCurrentModalOrderAsImage() {
             if (!state.currentActiveModalOrder) return;
             const o = state.currentActiveModalOrder;
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.packaging, o.shipping);
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.shipping);
         }
 
         function increaseStock(id) {
@@ -1505,14 +1437,13 @@
             const custName = document.getElementById('cust-name').value.trim() || 'عميل نقدي';
             const custPhone = document.getElementById('cust-phone').value.trim() || '-';
             const discount = parseFloat(document.getElementById('pos-discount').value) || 0;
-            const packaging = parseFloat(document.getElementById('pos-packaging').value) || 0;
             const shipping = parseFloat(document.getElementById('pos-shipping').value) || 0;
             const total = parseFloat(document.getElementById('pos-grand-total').innerText) || 0;
             
             const previewId = 'ORD-' + String(state.orders.length + 1).padStart(4, '0');
             const dateStr = new Date().toLocaleDateString('en-GB');
 
-            generateReceiptPreviewImage(state.posCart, custName, custPhone, total, previewId, dateStr, discount, packaging, shipping);
+            generateReceiptPreviewImage(state.posCart, custName, custPhone, total, previewId, dateStr, discount, shipping);
         }
 
         function checkoutPOS() {
@@ -1527,7 +1458,6 @@
             }
 
             const discount = parseFloat(document.getElementById('pos-discount').value) || 0;
-            const packaging = parseFloat(document.getElementById('pos-packaging').value) || 0;
             const shipping = parseFloat(document.getElementById('pos-shipping').value) || 0;
             const total = parseFloat(document.getElementById('pos-grand-total').innerText) || 0;
             
@@ -1549,7 +1479,6 @@
                 timestamp: Date.now(),
                 total: total, 
                 discount: discount,
-                packaging: packaging,
                 shipping: shipping,
                 customerName: custName,
                 customerPhone: custPhone,
@@ -1589,7 +1518,7 @@
             });
         }
 
-        function generateReceiptPreviewImage(items, custName, custPhone, total, orderId, dateStr, discount, packaging, shipping) {
+        function generateReceiptPreviewImage(items, custName, custPhone, total, orderId, dateStr, discount, shipping) {
             document.getElementById('rec-id').innerText = orderId;
             document.getElementById('rec-date').innerText = dateStr;
             document.getElementById('rec-due-date').innerText = dateStr;
@@ -1616,7 +1545,7 @@
                 `;
             });
 
-            document.getElementById('rec-[#C5A059]').innerText = subtotal.toFixed(2) + ' EGP';
+            document.getElementById('rec-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
             const discRow = document.getElementById('rec-discount-row');
             if (discount > 0) {
@@ -1624,14 +1553,6 @@
                 document.getElementById('rec-discount-val').innerText = `${discount.toFixed(2)} EGP`;
             } else {
                 discRow.classList.add('hidden');
-            }
-
-            const packRow = document.getElementById('rec-packaging-row');
-            if (packaging > 0) {
-                packRow.classList.remove('hidden');
-                document.getElementById('rec-packaging-val').innerText = `${packaging.toFixed(2)} EGP`;
-            } else {
-                packRow.classList.add('hidden');
             }
 
             const shipRow = document.getElementById('rec-shipping-row');
@@ -1723,7 +1644,7 @@
             document.getElementById('edit-prod-id').value = p.id;
             document.getElementById('prod-code').value = p.code || 'G-001';
             document.getElementById('prod-name').value = p.name;
-            document.getElementById('prod-[#C5A059]').value = p.cost || 0;
+            document.getElementById('prod-cost').value = p.cost || 0;
             document.getElementById('prod-price').value = p.price;
             document.getElementById('prod-stock').value = p.stock;
             populateCategoryDropdown();
