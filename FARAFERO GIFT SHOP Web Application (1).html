@@ -727,7 +727,7 @@
             </table>
         </div>
 
-        <!-- تفاصيل الخصم، التغليف، والشحن الديناميكية -->
+        <!-- تفاصيل الخصم، التغليف، والشحن الثابتة -->
         <div class="pt-4 border-t border-slate-200 space-y-3">
             <div id="rec-totals-container" class="w-64 ml-auto space-y-2 text-[11px] text-right"></div>
             <div class="w-full border-t border-slate-300 pt-3 text-center">
@@ -1159,6 +1159,32 @@
             });
         }
 
+        // دالة موحدة لبناء الخانات الثابتة للإجماليات في الفاتورة
+        function generateFixedTotalsHtml(subtotal, discount, packaging, shipping, total) {
+            return `
+                <div class="flex justify-between text-slate-600">
+                    <span class="text-slate-400">Subtotal</span>
+                    <span class="font-bold">${subtotal.toFixed(2)} EGP</span>
+                </div>
+                <div class="flex justify-between text-rose-600">
+                    <span class="text-slate-400">Discount</span>
+                    <span class="font-bold">-${discount.toFixed(2)} EGP</span>
+                </div>
+                <div class="flex justify-between text-slate-600">
+                    <span class="text-slate-400">Packing</span>
+                    <span class="font-bold">${packaging.toFixed(2)} EGP</span>
+                </div>
+                <div class="flex justify-between text-slate-600">
+                    <span class="text-slate-400">Delivery</span>
+                    <span class="font-bold">${shipping.toFixed(2)} EGP</span>
+                </div>
+                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
+                    <span class="text-slate-800">Total</span>
+                    <span class="text-[#C5A059] text-base">${total.toFixed(2)} EGP</span>
+                </div>
+            `;
+        }
+
         function openPOSOrderDetails(firebaseId) {
             const order = state.orders.find(o => o.firebaseId === firebaseId);
             if (!order) return;
@@ -1197,46 +1223,7 @@
                 ship = order.total - (subtotal - disc);
             }
 
-            // بناء الإجماليات ديناميكياً داخل المودال
-            const totalsContainer = document.getElementById('pos-modal-totals-container');
-            let totalsHtml = `
-                <div class="flex justify-between text-slate-600">
-                    <span class="text-slate-400">Subtotal</span>
-                    <span class="font-bold">${subtotal.toFixed(2)} EGP</span>
-                </div>
-            `;
-            if (disc > 0) {
-                totalsHtml += `
-                    <div class="flex justify-between text-rose-600">
-                        <span class="text-slate-400">Discount</span>
-                        <span class="font-bold">-${disc.toFixed(2)} EGP</span>
-                    </div>
-                `;
-            }
-            if (pack > 0) {
-                totalsHtml += `
-                    <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Packing</span>
-                        <span class="font-bold">${pack.toFixed(2)} EGP</span>
-                    </div>
-                `;
-            }
-            if (ship > 0) {
-                totalsHtml += `
-                    <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Delivery</span>
-                        <span class="font-bold">${ship.toFixed(2)} EGP</span>
-                    </div>
-                `;
-            }
-            totalsHtml += `
-                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
-                    <span class="text-slate-800">Total</span>
-                    <span class="text-[#C5A059] text-base">${order.total.toFixed(2)} EGP</span>
-                </div>
-            `;
-            totalsContainer.innerHTML = totalsHtml;
-
+            document.getElementById('pos-modal-totals-container').innerHTML = generateFixedTotalsHtml(subtotal, disc, pack, ship, order.total);
             document.getElementById('pos-order-details-modal').classList.remove('hidden');
         }
 
@@ -1443,45 +1430,7 @@
                 ship = order.total - (subtotal - disc);
             }
 
-            const totalsContainer = document.getElementById('modal-totals-container');
-            let totalsHtml = `
-                <div class="flex justify-between text-slate-600">
-                    <span class="text-slate-400">Subtotal</span>
-                    <span class="font-bold">${subtotal.toFixed(2)} EGP</span>
-                </div>
-            `;
-            if (disc > 0) {
-                totalsHtml += `
-                    <div class="flex justify-between text-rose-600">
-                        <span class="text-slate-400">Discount</span>
-                        <span class="font-bold">-${disc.toFixed(2)} EGP</span>
-                    </div>
-                `;
-            }
-            if (pack > 0) {
-                totalsHtml += `
-                    <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Packing</span>
-                        <span class="font-bold">${pack.toFixed(2)} EGP</span>
-                    </div>
-                `;
-            }
-            if (ship > 0) {
-                totalsHtml += `
-                    <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Delivery</span>
-                        <span class="font-bold">${ship.toFixed(2)} EGP</span>
-                    </div>
-                `;
-            }
-            totalsHtml += `
-                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
-                    <span class="text-slate-800">Total</span>
-                    <span class="text-[#C5A059] text-base">${order.total.toFixed(2)} EGP</span>
-                </div>
-            `;
-            totalsContainer.innerHTML = totalsHtml;
-
+            document.getElementById('modal-totals-container').innerHTML = generateFixedTotalsHtml(subtotal, disc, pack, ship, order.total);
             document.getElementById('order-details-modal').classList.remove('hidden');
         }
 
@@ -1647,45 +1596,7 @@
                 shipping = total - (subtotal - discount);
             }
 
-            // بناء الإجماليات ديناميكياً لكي يتم التقاطها بنسبة 100% في الصورة
-            const totalsContainer = document.getElementById('rec-totals-container');
-            let totalsHtml = `
-                <div class="flex justify-between text-slate-600">
-                    <span class="text-slate-400">Subtotal</span>
-                    <span class="font-bold">${subtotal.toFixed(2)} EGP</span>
-                </div>
-            `;
-            if (discount > 0) {
-                totalsHtml += `
-                    <div class="flex justify-between text-rose-600">
-                        <span class="text-slate-400">Discount</span>
-                        <span class="font-bold">-${discount.toFixed(2)} EGP</span>
-                    </div>
-                `;
-            }
-            if (packaging > 0) {
-                totalsHtml += `
-                    <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Packing</span>
-                        <span class="font-bold">${packaging.toFixed(2)} EGP</span>
-                    </div>
-                `;
-            }
-            if (shipping > 0) {
-                totalsHtml += `
-                    <div class="flex justify-between text-slate-600">
-                        <span class="text-slate-400">Delivery</span>
-                        <span class="font-bold">${shipping.toFixed(2)} EGP</span>
-                    </div>
-                `;
-            }
-            totalsHtml += `
-                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
-                    <span class="text-slate-800">Total</span>
-                    <span class="text-[#C5A059] text-base">${total.toFixed(2)} EGP</span>
-                </div>
-            `;
-            totalsContainer.innerHTML = totalsHtml;
+            document.getElementById('rec-totals-container').innerHTML = generateFixedTotalsHtml(subtotal, discount, packaging, shipping, total);
 
             const receiptEl = document.getElementById('printable-receipt');
             receiptEl.classList.remove('hidden');
