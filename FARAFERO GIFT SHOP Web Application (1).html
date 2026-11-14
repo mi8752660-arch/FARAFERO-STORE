@@ -860,8 +860,8 @@
             startDataListeners();
         }
 
-        // دالة رفع وضغط آمن جداً ومضبوط لمنع تجاوز حدود قاعدة البيانات
-        function handleMobileImageUpload(event) {
+        // دالة آمنة وخفيفة جداً لضغط الصور من الموبايل بدون أي تهنيج للأبد
+        async function handleMobileImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
@@ -870,44 +870,47 @@
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    // تقليل الأبعاد والجودة لضمان ألا تتجاوز الصورة حجم قاعدة البيانات مطلقاً
-                    const MAX_WIDTH = 400;
-                    const MAX_HEIGHT = 400;
-                    let width = img.width;
-                    let height = img.height;
+            try {
+                // معالجة سريعة وخفيفة في الخلفية تمنع تهنيج الموبايل نهائياً
+                const bitmap = await createImageBitmap(file, { resizeWidth: 250, resizeHeight: 250, resizeQuality: 'low' });
+                const canvas = document.createElement('canvas');
+                canvas.width = bitmap.width;
+                canvas.height = bitmap.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(bitmap, 0, 0);
 
-                    if (width > height) {
-                        if (width > MAX_WIDTH) {
-                            height *= MAX_WIDTH / width;
-                            width = MAX_WIDTH;
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
+                document.getElementById('prod-image').value = compressedDataUrl;
+                document.getElementById('prod-thumb-preview').src = compressedDataUrl;
+                document.getElementById('image-preview-container').classList.remove('hidden');
+            } catch (err) {
+                // الطريقة البديلة الآمنة في حال المتصفحات القديمة
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const MAX = 250;
+                        if (width > height) {
+                            if (width > MAX) { height *= MAX / width; width = MAX; }
+                        } else {
+                            if (height > MAX) { width *= MAX / height; height = MAX; }
                         }
-                    } else {
-                        if (height > MAX_HEIGHT) {
-                            width *= MAX_HEIGHT / height;
-                            height = MAX_HEIGHT;
-                        }
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
-                    
-                    // وضع النتيجة في حقل الرابط ومعاينة الصورة المصغرة
-                    document.getElementById('prod-image').value = compressedDataUrl;
-                    document.getElementById('prod-thumb-preview').src = compressedDataUrl;
-                    document.getElementById('image-preview-container').classList.remove('hidden');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
+                        document.getElementById('prod-image').value = compressedDataUrl;
+                        document.getElementById('prod-thumb-preview').src = compressedDataUrl;
+                        document.getElementById('image-preview-container').classList.remove('hidden');
+                    };
+                    img.src = e.target.result;
                 };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
+                reader.readAsDataURL(file);
+            }
         }
 
         function startDataListeners() {
@@ -1827,7 +1830,7 @@
                     alert('تم تحديث الهدية بنجاح!');
                     closeProductModal();
                 }).catch(err => {
-                    alert('خطأ في الحفظ: ربما حجم الصورة كبير جداً، اختر صورة أصغر.');
+                    alert('خطأ في الحفظ: حجم الصورة كبير جداً، اختر صورة أصغر.');
                 });
             } else {
                 const newId = 'p' + Date.now();
@@ -1835,7 +1838,7 @@
                     alert('تم إضافة الهدية بنجاح!');
                     closeProductModal();
                 }).catch(err => {
-                    alert('خطأ في الحفظ: ربما حجم الصورة كبير جداً، اختر صورة أصغر.');
+                    alert('خطأ في الحفظ: حجم الصورة كبير جداً، اختر صورة أصغر.');
                 });
             }
         }
