@@ -169,17 +169,18 @@
                                 <div id="pos-cart-items" class="divide-y max-h-[120px] overflow-y-auto my-1 text-xs bg-slate-50/50 p-2 rounded-xl border"></div>
                             </div>
 
+                            <!-- خانات تفاصيل الفاتورة (الخصم، التغليف، الشحن) -->
                             <div class="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-2xl border border-slate-100 text-xs">
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">Discount (-):</label>
+                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">خصم (-):</label>
                                     <input type="number" id="pos-discount" value="0" oninput="renderPOSCart()" class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 font-bold text-center focus:outline-none focus:border-[#C5A059]">
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">Packing (+):</label>
+                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">تغليف (+):</label>
                                     <input type="number" id="pos-packaging" value="0" oninput="renderPOSCart()" class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 font-bold text-center focus:outline-none focus:border-[#C5A059]">
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">Delivery (+):</label>
+                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">شحن (+):</label>
                                     <input type="number" id="pos-shipping" value="0" oninput="renderPOSCart()" class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 font-bold text-center focus:outline-none focus:border-[#C5A059]">
                                 </div>
                             </div>
@@ -768,6 +769,7 @@
             </table>
         </div>
 
+        <!-- تفاصيل الخصم، التغليف، والشحن داخل الفاتورة -->
         <div class="pt-4 border-t border-slate-200 space-y-3">
             <div class="w-64 ml-auto space-y-2 text-[11px] text-right">
                 <div class="flex justify-between text-slate-600">
@@ -860,7 +862,6 @@
             startDataListeners();
         }
 
-        // ضغط الصورة الفائق الحجم والصراعي لضمان سرعة خيالية وعدم ثقل اللينك نهائياً
         async function handleMobileImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -871,7 +872,6 @@
             }
 
             try {
-                // ضبط أبعاد الصورة على 150 بكسل فقط لتكون خفيفة للغاية ولا تسبب أي بطء في قاعدة البيانات أو اللينك
                 const bitmap = await createImageBitmap(file, { 
                     resizeWidth: 150, 
                     resizeHeight: 150, 
