@@ -87,7 +87,7 @@
         </div>
     </header>
 
-    <!-- NAVIGATION BAR -->
+    <!-- NAVIGATION BAR (تم حذف الأكثر مبيعا لإعطاء مساحة مريحة لجميع الأزرار) -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around shadow-2xl z-50 max-w-xl mx-auto md:max-w-7xl" dir="rtl">
         <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn text-xs font-bold text-[#C5A059] flex flex-col items-center flex-1 px-2 py-1 transition-all">
             <i class="fa-solid fa-gift text-base mb-1"></i> الهدايا
@@ -169,18 +169,17 @@
                                 <div id="pos-cart-items" class="divide-y max-h-[120px] overflow-y-auto my-1 text-xs bg-slate-50/50 p-2 rounded-xl border"></div>
                             </div>
 
-                            <!-- خانات تفاصيل الفاتورة (الخصم، التغليف، الشحن) -->
                             <div class="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-2xl border border-slate-100 text-xs">
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">خصم (-):</label>
+                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">Discount (-):</label>
                                     <input type="number" id="pos-discount" value="0" oninput="renderPOSCart()" class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 font-bold text-center focus:outline-none focus:border-[#C5A059]">
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">تغليف (+):</label>
+                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">Packing (+):</label>
                                     <input type="number" id="pos-packaging" value="0" oninput="renderPOSCart()" class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 font-bold text-center focus:outline-none focus:border-[#C5A059]">
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">شحن (+):</label>
+                                    <label class="text-[10px] font-bold text-[#C5A059] mb-1 block">Delivery (+):</label>
                                     <input type="number" id="pos-shipping" value="0" oninput="renderPOSCart()" class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 font-bold text-center focus:outline-none focus:border-[#C5A059]">
                                 </div>
                             </div>
@@ -469,7 +468,28 @@
             </div>
 
             <div class="pt-4 border-t border-slate-200 space-y-3">
-                <div id="modal-totals-container" class="w-64 ml-auto space-y-2 text-[11px] text-right"></div>
+                <div class="w-64 ml-auto space-y-2 text-[11px] text-right">
+                    <div class="flex justify-between text-slate-600">
+                        <span class="text-slate-400">Subtotal</span>
+                        <span class="font-bold" id="modal-ord-subtotal">0.00 EGP</span>
+                    </div>
+                    <div id="modal-ord-disc-row" class="flex justify-between text-rose-600 hidden">
+                        <span class="text-slate-400">Discount</span>
+                        <span id="modal-ord-disc-val" class="font-bold">0.00 EGP</span>
+                    </div>
+                    <div id="modal-ord-pack-row" class="flex justify-between text-slate-600 hidden">
+                        <span class="text-slate-400">Packing</span>
+                        <span id="modal-ord-pack-val" class="font-bold">0.00 EGP</span>
+                    </div>
+                    <div id="modal-ord-ship-row" class="flex justify-between text-slate-600 hidden">
+                        <span class="text-slate-400">Delivery</span>
+                        <span id="modal-ord-ship-val" class="font-bold">0.00 EGP</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
+                        <span class="text-slate-800">Total</span>
+                        <span class="text-[#C5A059] text-base" id="modal-ord-grand-total">0.00 EGP</span>
+                    </div>
+                </div>
                 <div class="w-full border-t border-slate-300 pt-3 text-center">
                     <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Farafero Gift Shop</p>
                 </div>
@@ -549,7 +569,28 @@
             </div>
 
             <div class="pt-4 border-t border-slate-200 space-y-3">
-                <div id="pos-modal-totals-container" class="w-64 ml-auto space-y-2 text-[11px] text-right"></div>
+                <div class="w-64 ml-auto space-y-2 text-[11px] text-right">
+                    <div class="flex justify-between text-slate-600">
+                        <span class="text-slate-400">Subtotal</span>
+                        <span class="font-bold" id="pos-modal-ord-subtotal">0.00 EGP</span>
+                    </div>
+                    <div id="pos-modal-ord-disc-row" class="flex justify-between text-rose-600 hidden">
+                        <span class="text-slate-400">Discount</span>
+                        <span id="pos-modal-ord-disc-val" class="font-bold">0.00 EGP</span>
+                    </div>
+                    <div id="pos-modal-ord-pack-row" class="flex justify-between text-slate-600 hidden">
+                        <span class="text-slate-400">Packing</span>
+                        <span id="pos-modal-ord-pack-val" class="font-bold">0.00 EGP</span>
+                    </div>
+                    <div id="pos-modal-ord-ship-row" class="flex justify-between text-slate-600 hidden">
+                        <span class="text-slate-400">Delivery</span>
+                        <span id="pos-modal-ord-ship-val" class="font-bold">0.00 EGP</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
+                        <span class="text-slate-800">Total</span>
+                        <span class="text-[#C5A059] text-base" id="pos-modal-ord-grand-total">0.00 EGP</span>
+                    </div>
+                </div>
                 <div class="w-full border-t border-slate-300 pt-3 text-center">
                     <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Farafero Gift Shop</p>
                 </div>
@@ -632,19 +673,8 @@
                     <select id="prod-category" class="w-full border p-2.5 rounded-xl bg-slate-50 font-bold text-slate-800"></select>
                 </div>
                 <div>
-                    <label class="text-slate-600 block mb-1">صورة الهدية (رفع من الموبايل أو رابط سريع):</label>
-                    <div class="flex gap-2 items-center">
-                        <input type="text" id="prod-image" placeholder="رابط الصورة أو سيتم إضافتها أوتوماتيك..." class="w-full border p-2 rounded-xl text-[11px] bg-slate-50 font-semibold">
-                        <input type="file" id="prod-file-input" accept="image/*" onchange="handleMobileImageUpload(event)" class="hidden">
-                        <button type="button" onclick="document.getElementById('prod-file-input').click()" class="bg-[#C5A059] hover:bg-[#b08b49] text-white px-3.5 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap shadow-md flex items-center">
-                            <i class="fa-solid fa-cloud-arrow-up ml-1"></i> اختر صورة
-                        </button>
-                    </div>
-                    <!-- معاينة الصورة المصغرة المرفوعة -->
-                    <div id="image-preview-container" class="mt-2 hidden flex items-center gap-2 bg-amber-50/60 p-2 rounded-xl border border-amber-200">
-                        <img id="prod-thumb-preview" src="" class="w-12 h-12 rounded-lg object-cover shadow-sm">
-                        <span class="text-[11px] font-bold text-emerald-700">✓ تم ضغط الصورة وجعلها فائقة السرعة</span>
-                    </div>
+                    <label class="text-slate-600 block mb-1">رابط الصورة (URL):</label>
+                    <input type="text" id="prod-image" placeholder="https://..." class="w-full border p-2.5 rounded-xl">
                 </div>
             </div>
             <div class="flex space-x-2 space-x-reverse pt-2">
@@ -667,7 +697,7 @@
         </div>
     </div>
 
-    <!-- PRINTABLE RECEIPT TEMPLATE -->
+    <!-- PRINTABLE RECEIPT TEMPLATE (الشكل المخفي للرسم) -->
     <div id="printable-receipt" class="hidden max-w-2xl mx-auto p-8 bg-white text-xs space-y-6" dir="ltr">
         <div class="flex justify-between items-start border-b border-slate-300 pb-5">
             <div class="space-y-1">
@@ -727,9 +757,29 @@
             </table>
         </div>
 
-        <!-- خانات الإجماليات الخمسة الثابتة إجبارياً -->
         <div class="pt-4 border-t border-slate-200 space-y-3">
-            <div id="rec-totals-container" class="w-64 ml-auto space-y-2 text-[11px] text-right"></div>
+            <div class="w-64 ml-auto space-y-2 text-[11px] text-right">
+                <div class="flex justify-between text-slate-600">
+                    <span class="text-slate-400">Subtotal</span>
+                    <span class="font-bold" id="rec-subtotal">0.00 EGP</span>
+                </div>
+                <div id="rec-discount-row" class="flex justify-between text-rose-600 hidden">
+                    <span class="text-slate-400">Discount</span>
+                    <span id="rec-discount-val" class="font-bold">0.00 EGP</span>
+                </div>
+                <div id="rec-packaging-row" class="flex justify-between text-slate-600 hidden">
+                    <span class="text-slate-400">Packing</span>
+                    <span id="rec-packaging-val" class="font-bold">0.00 EGP</span>
+                </div>
+                <div id="rec-shipping-row" class="flex justify-between text-slate-600 hidden">
+                    <span class="text-slate-400">Delivery</span>
+                    <span id="rec-shipping-val" class="font-bold">0.00 EGP</span>
+                </div>
+                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
+                    <span class="text-slate-800">Total</span>
+                    <span class="text-[#C5A059] text-base" id="rec-grand-total">0.00 EGP</span>
+                </div>
+            </div>
             <div class="w-full border-t border-slate-300 pt-3 text-center">
                 <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Farafero Gift Shop</p>
             </div>
@@ -769,66 +819,34 @@
         };
 
         const defaultNewProducts = [
-            { id: "p1", code: "G-001", name: "دبدوب أحمر عملاق كلاسيك", category: "دباديب", cost: 250, price: 450, stock: 100, image: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?w=300&q=70" },
-            { id: "p2", code: "G-002", name: "دبدوب بنكي محبوك بشريطة", category: "دباديب", cost: 180, price: 320, stock: 100, image: "https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=300&q=70" },
-            { id: "p3", code: "G-003", name: "دبدوب أبيض قطيفة ناعم", category: "دباديب", cost: 200, price: 380, stock: 100, image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=300&q=70" },
-            { id: "p4", code: "G-004", name: "دبدوب بني فائق النعومة", category: "دباديب", cost: 220, price: 400, stock: 100, image: "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=300&q=70" },
-            { id: "p5", code: "G-005", name: "دبدوب رمادي مع قلادة قلب", category: "دباديب", cost: 190, price: 350, stock: 100, image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=300&q=70" },
-            { id: "p6", code: "G-006", name: "بوكيه ورد جوري أحمر طبيعي", category: "ورد", cost: 200, price: 380, stock: 100, image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=300&q=70" },
-            { id: "p7", code: "G-007", name: "بوكيه ورد توليب أبيض فاخر", category: "ورد", cost: 220, price: 420, stock: 100, image: "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=300&q=70" },
-            { id: "p8", code: "G-008", name: "باقة ورد زهرية مجمعة للمناسبات", category: "ورد", cost: 250, price: 450, stock: 100, image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=300&q=70" },
-            { id: "p9", code: "G-009", name: "صندوق ورد أصفر ملكي", category: "ورد", cost: 280, price: 500, stock: 100, image: "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=300&q=70" },
-            { id: "p10", code: "G-010", name: "بوكيه ورد جوري بنفشي فريد", category: "ورد", cost: 230, price: 430, stock: 100, image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&q=70" },
-            { id: "p11", code: "G-011", name: "فازة ورد دوار الشمس المشرق", category: "ورد", cost: 180, price: 340, stock: 100, image: "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=300&q=70" },
-            { id: "p12", code: "G-012", name: "سلسلة استانلس فضي طلاء ثقيل", category: "هدايا استانلس", cost: 90, price: 180, stock: 100, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&q=70" },
-            { id: "p13", code: "G-013", name: "سوار استانلس ذهبي مرصع بالفصوص", category: "هدايا استانلس", cost: 120, price: 230, stock: 100, image: "https://images.unsplash.com/photo-1611591475165-385fb9f7a5bd?w=300&q=70" },
-            { id: "p14", code: "G-014", name: "خاتم استانلس مطعم بحجر عقيق", category: "هدايا استانلس", cost: 70, price: 140, stock: 100, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300&q=70" },
-            { id: "p15", code: "G-015", name: "ميدالية مفاتيح استانلس محفورة", category: "هدايا استانلس", cost: 50, price: 110, stock: 100, image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=300&q=70" },
-            { id: "p16", code: "G-016", name: "خلخال استانلس ناعم أنيق", category: "هدايا استانلس", cost: 60, price: 130, stock: 100, image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300&q=70" },
-            { id: "p17", code: "G-017", name: "حلق استانلس كوري عصري", category: "هدايا استانلس", cost: 80, price: 160, stock: 100, image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=300&q=70" },
-            { id: "p18", code: "G-018", name: "طقم استانلس (سلسلة + انسيال)", category: "هدايا استانلس", cost: 160, price: 300, stock: 100, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300&q=70" },
-            { id: "p19", code: "G-019", name: "شنطة يد جلد سوداء كلاسيك", category: "شنط حريمى", cost: 280, price: 520, stock: 100, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=300&q=70" },
-            { id: "p20", code: "G-020", name: "شنطة كروس جلد بني فاخرة", category: "شنط حريمى", cost: 240, price: 460, stock: 100, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=300&q=70" },
-            { id: "p21", code: "G-021", name: "حقيبة سهرة بيج بأقفال ذهبية", category: "شنط حريمى", cost: 300, price: 580, stock: 100, image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=300&q=70" },
-            { id: "p22", code: "G-022", name: "شنطة حريمي حمراء أنيقة", category: "شنط حريمى", cost: 260, price: 490, stock: 100, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=300&q=70" },
-            { id: "p23", code: "G-023", name: "حقيبة ظهر نسائية جلد ناعم", category: "شنط حريمى", cost: 270, price: 510, stock: 100, image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&q=70" },
-            { id: "p24", code: "G-024", name: "كليتش حريمي مطرزة للسهرات", category: "شنط حريمى", cost: 210, price: 410, stock: 100, image: "https://images.unsplash.com/photo-1575032617751-6d3381e4b97d?w=300&q=70" }
+            { id: "p1", code: "G-001", name: "دبدوب أحمر عملاق كلاسيك", category: "دباديب", cost: 250, price: 450, stock: 100, image: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?w=500&q=80" },
+            { id: "p2", code: "G-002", name: "دبدوب بنكي محبوك بشريطة", category: "دباديب", cost: 180, price: 320, stock: 100, image: "https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=500&q=80" },
+            { id: "p3", code: "G-003", name: "دبدوب أبيض قطيفة ناعم", category: "دباديب", cost: 200, price: 380, stock: 100, image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=500&q=80" },
+            { id: "p4", code: "G-004", name: "دبدوب بني فائق النعومة", category: "دباديب", cost: 220, price: 400, stock: 100, image: "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=500&q=80" },
+            { id: "p5", code: "G-005", name: "دبدوب رمادي مع قلادة قلب", category: "دباديب", cost: 190, price: 350, stock: 100, image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=500&q=80" },
+            { id: "p6", code: "G-006", name: "بوكيه ورد جوري أحمر طبيعي", category: "ورد", cost: 200, price: 380, stock: 100, image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=500&q=80" },
+            { id: "p7", code: "G-007", name: "بوكيه ورد توليب أبيض فاخر", category: "ورد", cost: 220, price: 420, stock: 100, image: "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=500&q=80" },
+            { id: "p8", code: "G-008", name: "باقة ورد زهرية مجمعة للمناسبات", category: "ورد", cost: 250, price: 450, stock: 100, image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=500&q=80" },
+            { id: "p9", code: "G-009", name: "صندوق ورد أصفر ملكي", category: "ورد", cost: 280, price: 500, stock: 100, image: "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=500&q=80" },
+            { id: "p10", code: "G-010", name: "بوكيه ورد جوري بنفشي فريد", category: "ورد", cost: 230, price: 430, stock: 100, image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80" },
+            { id: "p11", code: "G-011", name: "فازة ورد دوار الشمس المشرق", category: "ورد", cost: 180, price: 340, stock: 100, image: "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=500&q=80" },
+            { id: "p12", code: "G-012", name: "سلسلة استانلس فضي طلاء ثقيل", category: "هدايا استانلس", cost: 90, price: 180, stock: 100, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80" },
+            { id: "p13", code: "G-013", name: "سوار استانلس ذهبي مرصع بالفصوص", category: "هدايا استانلس", cost: 120, price: 230, stock: 100, image: "https://images.unsplash.com/photo-1611591475165-385fb9f7a5bd?w=500&q=80" },
+            { id: "p14", code: "G-014", name: "خاتم استانلس مطعم بحجر عقيق", category: "هدايا استانلس", cost: 70, price: 140, stock: 100, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500&q=80" },
+            { id: "p15", code: "G-015", name: "ميدالية مفاتيح استانلس محفورة", category: "هدايا استانلس", cost: 50, price: 110, stock: 100, image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&q=80" },
+            { id: "p16", code: "G-016", name: "خلخال استانلس ناعم أنيق", category: "هدايا استانلس", cost: 60, price: 130, stock: 100, image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&q=80" },
+            { id: "p17", code: "G-017", name: "حلق استانلس كوري عصري", category: "هدايا استانلس", cost: 80, price: 160, stock: 100, image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=500&q=80" },
+            { id: "p18", code: "G-018", name: "طقم استانلس (سلسلة + انسيال)", category: "هدايا استانلس", cost: 160, price: 300, stock: 100, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80" },
+            { id: "p19", code: "G-019", name: "شنطة يد جلد سوداء كلاسيك", category: "شنط حريمى", cost: 280, price: 520, stock: 100, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&q=80" },
+            { id: "p20", code: "G-020", name: "شنطة كروس جلد بني فاخرة", category: "شنط حريمى", cost: 240, price: 460, stock: 100, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500&q=80" },
+            { id: "p21", code: "G-021", name: "حقيبة سهرة بيج بأقفال ذهبية", category: "شنط حريمى", cost: 300, price: 580, stock: 100, image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=500&q=80" },
+            { id: "p22", code: "G-022", name: "شنطة حريمي حمراء أنيقة", category: "شنط حريمى", cost: 260, price: 490, stock: 100, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80" },
+            { id: "p23", code: "G-023", name: "حقيبة ظهر نسائية جلد ناعم", category: "شنط حريمى", cost: 270, price: 510, stock: 100, image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80" },
+            { id: "p24", code: "G-024", name: "كليتش حريمي مطرزة للسهرات", category: "شنط حريمى", cost: 210, price: 410, stock: 100, image: "https://images.unsplash.com/photo-1575032617751-6d3381e4b97d?w=500&q=80" }
         ];
 
         function initApp() {
             startDataListeners();
-        }
-
-        async function handleMobileImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (!file.type.match('image.*')) {
-                alert('برجاء اختيار ملف صورة صالح!');
-                return;
-            }
-
-            try {
-                const bitmap = await createImageBitmap(file, { 
-                    resizeWidth: 150, 
-                    resizeHeight: 150, 
-                    resizeQuality: 'low' 
-                });
-
-                const canvas = document.createElement('canvas');
-                canvas.width = bitmap.width;
-                canvas.height = bitmap.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(bitmap, 0, 0);
-
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.4);
-                document.getElementById('prod-image').value = compressedDataUrl;
-                document.getElementById('prod-thumb-preview').src = compressedDataUrl;
-                document.getElementById('image-preview-container').classList.remove('hidden');
-            } catch (error) {
-                console.error(error);
-                alert('عذراً، حدث خطأ أثناء ضغط الصورة. جرب اختيار صورة أخرى.');
-            }
         }
 
         function startDataListeners() {
@@ -1159,32 +1177,6 @@
             });
         }
 
-        // دالة موحدة لفرض ظهور الخانات الخمسة دائماً إجبارياً
-        function generateFixedTotalsHtml(subtotal, discount, packaging, shipping, total) {
-            return `
-                <div class="flex justify-between text-slate-600">
-                    <span class="text-slate-400">Subtotal</span>
-                    <span class="font-bold">${subtotal.toFixed(2)} EGP</span>
-                </div>
-                <div class="flex justify-between text-rose-600">
-                    <span class="text-slate-400">Discount</span>
-                    <span class="font-bold">-${discount.toFixed(2)} EGP</span>
-                </div>
-                <div class="flex justify-between text-slate-600">
-                    <span class="text-slate-400">Packing</span>
-                    <span class="font-bold">${packaging.toFixed(2)} EGP</span>
-                </div>
-                <div class="flex justify-between text-slate-600">
-                    <span class="text-slate-400">Delivery</span>
-                    <span class="font-bold">${shipping.toFixed(2)} EGP</span>
-                </div>
-                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-300 pt-2.5">
-                    <span class="text-slate-800">Total</span>
-                    <span class="text-[#C5A059] text-base">${total.toFixed(2)} EGP</span>
-                </div>
-            `;
-        }
-
         function openPOSOrderDetails(firebaseId) {
             const order = state.orders.find(o => o.firebaseId === firebaseId);
             if (!order) return;
@@ -1194,6 +1186,7 @@
             document.getElementById('pos-modal-ord-cust-name').innerText = order.customerName;
             document.getElementById('pos-modal-ord-cust-phone').innerText = order.customerPhone;
             document.getElementById('pos-modal-ord-date').innerText = order.date;
+            document.getElementById('pos-modal-ord-grand-total').innerText = order.total.toFixed(2) + ' EGP';
 
             let subtotal = 0;
             const itemsContainer = document.getElementById('pos-modal-ord-items-list');
@@ -1215,16 +1208,32 @@
                 `;
             });
 
-            let disc = parseFloat(order.discount) || 0;
-            let pack = parseFloat(order.packaging) || 0;
-            let ship = parseFloat(order.shipping) || 0;
+            document.getElementById('pos-modal-ord-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
-            const calcSub = subtotal - disc + pack;
-            if (order.total > calcSub && ship === 0) {
-                ship = order.total - calcSub;
+            const discRow = document.getElementById('pos-modal-ord-disc-row');
+            if (order.discount > 0) {
+                discRow.classList.remove('hidden');
+                document.getElementById('pos-modal-ord-disc-val').innerText = `${order.discount.toFixed(2)} EGP`;
+            } else {
+                discRow.classList.add('hidden');
             }
 
-            document.getElementById('pos-modal-totals-container').innerHTML = generateFixedTotalsHtml(subtotal, disc, pack, ship, order.total);
+            const packRow = document.getElementById('pos-modal-ord-pack-row');
+            if (order.packaging > 0) {
+                packRow.classList.remove('hidden');
+                document.getElementById('pos-modal-ord-pack-val').innerText = `${order.packaging.toFixed(2)} EGP`;
+            } else {
+                packRow.classList.add('hidden');
+            }
+
+            const shipRow = document.getElementById('pos-modal-ord-ship-row');
+            if (order.shipping > 0) {
+                shipRow.classList.remove('hidden');
+                document.getElementById('pos-modal-ord-ship-val').innerText = `${order.shipping.toFixed(2)} EGP`;
+            } else {
+                shipRow.classList.add('hidden');
+            }
+
             document.getElementById('pos-order-details-modal').classList.remove('hidden');
         }
 
@@ -1235,29 +1244,13 @@
         function downloadPOSOrderAsImage() {
             if (!state.posActiveModalOrder) return;
             const o = state.posActiveModalOrder;
-            let sub = 0;
-            o.detailedItems.forEach(i => sub += i.price * i.qty);
-            let disc = parseFloat(o.discount) || 0;
-            let pack = parseFloat(o.packaging) || 0;
-            let ship = parseFloat(o.shipping) || 0;
-            const calcSub = sub - disc + pack;
-            if (o.total > calcSub && ship === 0) ship = o.total - calcSub;
-
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, disc, pack, ship);
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.packaging, o.shipping);
         }
 
         function previewDirectOrderAsImage(firebaseId) {
             const o = state.orders.find(x => x.firebaseId === firebaseId);
             if (!o) return;
-            let sub = 0;
-            o.detailedItems.forEach(i => sub += i.price * i.qty);
-            let disc = parseFloat(o.discount) || 0;
-            let pack = parseFloat(o.packaging) || 0;
-            let ship = parseFloat(o.shipping) || 0;
-            const calcSub = sub - disc + pack;
-            if (o.total > calcSub && ship === 0) ship = o.total - calcSub;
-
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, disc, pack, ship);
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.packaging, o.shipping);
         }
 
         function addToPOS(id) {
@@ -1407,6 +1400,7 @@
             document.getElementById('modal-ord-cust-name').innerText = order.customerName;
             document.getElementById('modal-ord-cust-phone').innerText = order.customerPhone;
             document.getElementById('modal-ord-date').innerText = order.date;
+            document.getElementById('modal-ord-grand-total').innerText = order.total.toFixed(2) + ' EGP';
 
             const statusTextEl = document.getElementById('modal-ord-status-text');
             const cancelBtn = document.getElementById('cancel-order-btn');
@@ -1439,16 +1433,32 @@
                 `;
             });
 
-            let disc = parseFloat(order.discount) || 0;
-            let pack = parseFloat(order.packaging) || 0;
-            let ship = parseFloat(order.shipping) || 0;
+            document.getElementById('modal-ord-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
-            const calcSub = subtotal - disc + pack;
-            if (order.total > calcSub && ship === 0) {
-                ship = order.total - calcSub;
+            const discRow = document.getElementById('modal-ord-disc-row');
+            if (order.discount > 0) {
+                discRow.classList.remove('hidden');
+                document.getElementById('modal-ord-disc-val').innerText = `${order.discount.toFixed(2)} EGP`;
+            } else {
+                discRow.classList.add('hidden');
             }
 
-            document.getElementById('modal-totals-container').innerHTML = generateFixedTotalsHtml(subtotal, disc, pack, ship, order.total);
+            const packRow = document.getElementById('modal-ord-pack-row');
+            if (order.packaging > 0) {
+                packRow.classList.remove('hidden');
+                document.getElementById('modal-ord-pack-val').innerText = `${order.packaging.toFixed(2)} EGP`;
+            } else {
+                packRow.classList.add('hidden');
+            }
+
+            const shipRow = document.getElementById('modal-ord-ship-row');
+            if (order.shipping > 0) {
+                shipRow.classList.remove('hidden');
+                document.getElementById('modal-ord-ship-val').innerText = `${order.shipping.toFixed(2)} EGP`;
+            } else {
+                shipRow.classList.add('hidden');
+            }
+
             document.getElementById('order-details-modal').classList.remove('hidden');
         }
 
@@ -1479,15 +1489,7 @@
         function downloadCurrentModalOrderAsImage() {
             if (!state.currentActiveModalOrder) return;
             const o = state.currentActiveModalOrder;
-            let sub = 0;
-            o.detailedItems.forEach(i => sub += i.price * i.qty);
-            let disc = parseFloat(o.discount) || 0;
-            let pack = parseFloat(o.packaging) || 0;
-            let ship = parseFloat(o.shipping) || 0;
-            const calcSub = sub - disc + pack;
-            if (o.total > calcSub && ship === 0) ship = o.total - calcSub;
-
-            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, disc, pack, ship);
+            generateReceiptPreviewImage(o.detailedItems, o.customerName, o.customerPhone, o.total, o.id, o.date, o.discount, o.packaging, o.shipping);
         }
 
         function increaseStock(id) {
@@ -1614,41 +1616,56 @@
                 `;
             });
 
-            discount = parseFloat(discount) || 0;
-            packaging = parseFloat(packaging) || 0;
-            shipping = parseFloat(shipping) || 0;
+            document.getElementById('rec-[#C5A059]').innerText = subtotal.toFixed(2) + ' EGP';
 
-            const calcSub = subtotal - discount + packaging;
-            if (total > calcSub && shipping === 0) {
-                shipping = total - calcSub;
+            const discRow = document.getElementById('rec-discount-row');
+            if (discount > 0) {
+                discRow.classList.remove('hidden');
+                document.getElementById('rec-discount-val').innerText = `${discount.toFixed(2)} EGP`;
+            } else {
+                discRow.classList.add('hidden');
             }
 
-            document.getElementById('rec-totals-container').innerHTML = generateFixedTotalsHtml(subtotal, discount, packaging, shipping, total);
+            const packRow = document.getElementById('rec-packaging-row');
+            if (packaging > 0) {
+                packRow.classList.remove('hidden');
+                document.getElementById('rec-packaging-val').innerText = `${packaging.toFixed(2)} EGP`;
+            } else {
+                packRow.classList.add('hidden');
+            }
+
+            const shipRow = document.getElementById('rec-shipping-row');
+            if (shipping > 0) {
+                shipRow.classList.remove('hidden');
+                document.getElementById('rec-shipping-val').innerText = `${shipping.toFixed(2)} EGP`;
+            } else {
+                shipRow.classList.add('hidden');
+            }
+
+            document.getElementById('rec-grand-total').innerText = total.toFixed(2) + ' EGP';
 
             const receiptEl = document.getElementById('printable-receipt');
             receiptEl.classList.remove('hidden');
 
-            setTimeout(() => {
-                html2canvas(receiptEl, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
-                    receiptEl.classList.add('hidden');
-                    const imgDataUrl = canvas.toDataURL('image/png');
-                    
-                    document.getElementById('preview-img-result').src = imgDataUrl;
-                    
-                    const downloadBtn = document.getElementById('btn-actual-download');
-                    downloadBtn.onclick = function() {
-                        const link = document.createElement('a');
-                        link.download = `Invoice-${orderId}.png`;
-                        link.href = imgDataUrl;
-                        link.click();
-                    };
+            html2canvas(receiptEl, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+                receiptEl.classList.add('hidden');
+                const imgDataUrl = canvas.toDataURL('image/png');
+                
+                document.getElementById('preview-img-result').src = imgDataUrl;
+                
+                const downloadBtn = document.getElementById('btn-actual-download');
+                downloadBtn.onclick = function() {
+                    const link = document.createElement('a');
+                    link.download = `Invoice-${orderId}.png`;
+                    link.href = imgDataUrl;
+                    link.click();
+                };
 
-                    document.getElementById('receipt-image-preview-modal').classList.remove('hidden');
-                }).catch(err => {
-                    receiptEl.classList.add('hidden');
-                    alert('حدث خطأ أثناء معاينة الفاتورة.');
-                });
-            }, 200);
+                document.getElementById('receipt-image-preview-modal').classList.remove('hidden');
+            }).catch(err => {
+                receiptEl.classList.add('hidden');
+                alert('حدث خطأ أثناء معاينة الفاتورة.');
+            });
         }
 
         function closeReceiptImagePreview() {
@@ -1695,8 +1712,6 @@
             document.getElementById('prod-price').value = '';
             document.getElementById('prod-stock').value = '100';
             document.getElementById('prod-image').value = '';
-            document.getElementById('prod-file-input').value = '';
-            document.getElementById('image-preview-container').classList.add('hidden');
             populateCategoryDropdown();
             document.getElementById('product-modal').classList.remove('hidden');
         }
@@ -1708,21 +1723,12 @@
             document.getElementById('edit-prod-id').value = p.id;
             document.getElementById('prod-code').value = p.code || 'G-001';
             document.getElementById('prod-name').value = p.name;
-            document.getElementById('prod-cost').value = p.cost || 0;
+            document.getElementById('prod-[#C5A059]').value = p.cost || 0;
             document.getElementById('prod-price').value = p.price;
             document.getElementById('prod-stock').value = p.stock;
             populateCategoryDropdown();
             document.getElementById('prod-category').value = p.category;
             document.getElementById('prod-image').value = p.image;
-            document.getElementById('prod-file-input').value = '';
-            
-            if (p.image) {
-                document.getElementById('prod-thumb-preview').src = p.image;
-                document.getElementById('image-preview-container').classList.remove('hidden');
-            } else {
-                document.getElementById('image-preview-container').classList.add('hidden');
-            }
-
             document.getElementById('product-modal').classList.remove('hidden');
         }
 
@@ -1738,28 +1744,20 @@
             const price = parseFloat(document.getElementById('prod-price').value);
             const stock = parseInt(document.getElementById('prod-stock').value) || 100;
             const category = document.getElementById('prod-category').value;
-            const image = document.getElementById('prod-image').value.trim() || "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=300&q=70";
+            const image = document.getElementById('prod-image').value.trim() || "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500&q=80";
 
             if (!name || isNaN(price)) return alert('برجاء إدخال اسم الهدية وسعر البيع!');
 
             const prodData = { code, name, cost, price, stock, category, image };
 
             if (editId) {
-                db.collection("products").doc(editId).update(prodData).then(() => {
-                    alert('تم تحديث الهدية بنجاح!');
-                    closeProductModal();
-                }).catch(err => {
-                    alert('خطأ في الحفظ: حجم الصورة كبير جداً، اختر صورة أصغر.');
-                });
+                db.collection("products").doc(editId).update(prodData);
             } else {
                 const newId = 'p' + Date.now();
-                db.collection("products").doc(newId).set(prodData).then(() => {
-                    alert('تم إضافة الهدية بنجاح!');
-                    closeProductModal();
-                }).catch(err => {
-                    alert('خطأ في الحفظ: حجم الصورة كبير جداً، اختر صورة أصغر.');
-                });
+                db.collection("products").doc(newId).set(prodData);
             }
+
+            closeProductModal();
         }
 
         function deleteProd(id) {
