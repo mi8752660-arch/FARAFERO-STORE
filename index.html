@@ -503,9 +503,14 @@
                         <span>تحميل الصورة</span>
                     </button>
                 </div>
+                <!-- زر الإلغاء للفواتير العادية وزر الاعتماد لطلبات PO -->
                 <button id="cancel-order-btn" onclick="cancelCurrentOrder()" class="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center space-x-1.5 space-x-reverse hidden">
                     <i class="fa-solid fa-ban"></i>
                     <span>إلغاء الفاتورة وإرجاع المخزون</span>
+                </button>
+                <button id="approve-po-btn" onclick="approvePoOrder()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center space-x-1.5 space-x-reverse hidden">
+                    <i class="fa-solid fa-check-double"></i>
+                    <span>اعتماد طلب الشراء وخصمه من المخزون</span>
                 </button>
             </div>
         </div>
@@ -1285,7 +1290,7 @@
             let subtotal = 0;
 
             if (state.posCart.length === 0) {
-                container.innerHTML = '<p class="text-center text-slate-400 py-2">لم يتم اختيار أصناف للفاتورة بعد</p>';
+                container.innerHTML = '<p class="text-center text-slate-400 py-2">لم يتم اختيار بضاعة للفاتورة أولاً</p>';
             } else {
                 state.posCart.forEach((i, idx) => {
                     subtotal += i.price * i.qty;
@@ -1404,13 +1409,26 @@
 
             const statusTextEl = document.getElementById('modal-ord-status-text');
             const cancelBtn = document.getElementById('cancel-order-btn');
+            const approveBtn = document.getElementById('approve-po-btn');
 
-            if (order.status === 'cancelled') {
-                statusTextEl.innerHTML = 'Cancelled (ملغية)';
+            if (order.type === 'po') {
+                if (order.status === 'approved') {
+                    statusTextEl.innerHTML = 'Approved (معتمد)';
+                    if(approveBtn) approveBtn.classList.add('hidden');
+                } else {
+                    statusTextEl.innerHTML = 'Pending PO (معلق)';
+                    if(approveBtn) approveBtn.classList.remove('hidden');
+                }
                 if(cancelBtn) cancelBtn.classList.add('hidden');
             } else {
-                statusTextEl.innerHTML = 'Official (سارية)';
-                if(cancelBtn) cancelBtn.classList.remove('hidden');
+                if(approveBtn) approveBtn.classList.add('hidden');
+                if (order.status === 'cancelled') {
+                    statusTextEl.innerHTML = 'Cancelled (ملغية)';
+                    if(cancelBtn) cancelBtn.classList.add('hidden');
+                } else {
+                    statusTextEl.innerHTML = 'Official (سارية)';
+                    if(cancelBtn) cancelBtn.classList.remove('hidden');
+                }
             }
 
             let subtotal = 0;
@@ -1464,7 +1482,7 @@
 
         function cancelCurrentOrder() {
             const o = state.currentActiveModalOrder;
-            if (!o || o.status === 'cancelled') return;
+            if (!o || o.status === 'cancelled' || o.type === 'po') return;
 
             if (confirm(`هل أنت متأكد من إلغاء الفاتورة ${o.id}؟ سيتم إرجاع الكميات للمخزن السحابي.`)) {
                 o.status = 'cancelled';
@@ -1479,6 +1497,29 @@
 
                 db.collection("orders").doc(o.firebaseId).update({ status: 'cancelled' });
                 closeOrderModal();
+            }
+        }
+
+        function approvePoOrder() {
+            const o = state.currentActiveModalOrder;
+            if (!o || o.type !== 'po' || o.status === 'approved') return;
+
+            if (confirm(`هل أنت متأكد من اعتماد طلب الشراء ${o.id} وخصم الكميات من المخزن؟`)) {
+                o.status = 'approved';
+
+                o.detailedItems.forEach(item => {
+                    const prod = state.products.find(p => p.id === item.id);
+                    if (prod) {
+                        const newStock = Math.max(0, prod.stock - item.qty);
+                        db.collection("products").doc(prod.id).update({ stock: newStock });
+                    }
+                });
+
+                db.collection("orders").doc(o.firebaseId).update({ status: 'approved' }).then(() => {
+                    alert('تم اعتماد طلب الشراء وخصم المخزون بنجاح!');
+                    closeOrderModal();
+                    renderPoOrdersTable();
+                });
             }
         }
 
