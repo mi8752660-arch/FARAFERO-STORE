@@ -87,10 +87,10 @@
         </div>
     </header>
 
-    <!-- NAVIGATION BAR (تم حذف الأكثر مبيعا لإعطاء مساحة مريحة لجميع الأزرار) -->
+    <!-- NAVIGATION BAR -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around shadow-2xl z-50 max-w-xl mx-auto md:max-w-7xl" dir="rtl">
         <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn text-xs font-bold text-[#C5A059] flex flex-col items-center flex-1 px-2 py-1 transition-all">
-            <i class="fa-solid fa-gift text-base mb-1"></i> الهدايا
+            <i class="fa-solid fa-gift text-base mb-1"></i> البضاعة
         </button>
         <button onclick="switchTab('pos')" id="nav-pos" class="nav-btn text-xs font-bold text-slate-400 flex flex-col items-center flex-1 px-2 py-1 transition-all">
             <i class="fa-solid fa-cash-register text-base mb-1"></i> الحسابات
@@ -112,18 +112,18 @@
     <!-- MAIN CONTAINER -->
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-6">
 
-        <!-- TAB 1: CATALOG -->
+        <!-- TAB 1: CATALOG (البضاعة) -->
         <div id="tab-catalog" class="app-tab space-y-6">
             <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 border shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b pb-3">
                     <div>
-                        <h3 class="text-xl font-black text-slate-900">فئات وبنود الهدايا</h3>
+                        <h3 class="text-xl font-black text-slate-900">فئات وبنود البضاعة</h3>
                         <p class="text-xs text-slate-500 mt-1">اضغط على أي بند أو فئة لعرض وعزل البضاعة التابعة لها</p>
                     </div>
                     <span class="bg-amber-50 text-[#C5A059] text-xs font-bold px-3 py-1.5 rounded-xl border border-amber-200">بنود الفئات</span>
                 </div>
                 
-                <input type="text" id="catalog-search" oninput="renderCatalogDashboard()" placeholder="ابحث في الهدايا أو الأكواد..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:border-[#C5A059]">
+                <input type="text" id="catalog-search" oninput="renderCatalogDashboard()" placeholder="ابحث في البضاعة أو الأكواد..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:border-[#C5A059]">
 
                 <div id="catalog-categories-container" class="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar p-1"></div>
             </div>
@@ -135,11 +135,11 @@
                 <div class="lg:col-span-7 bg-white/90 backdrop-blur-sm rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
                     <div class="flex items-center justify-between border-b pb-3">
                         <h3 class="text-xl font-black text-slate-900 flex items-center">
-                            <i class="fa-solid fa-boxes-packing text-[#C5A059] ml-2"></i> الهدايا المتاحة في المحل
+                            <i class="fa-solid fa-boxes-packing text-[#C5A059] ml-2"></i> البضاعة المتاحة في المحل
                         </h3>
                         <span class="text-xs font-bold bg-slate-100 px-3 py-1 rounded-xl">اضغط لإضافة صنف</span>
                     </div>
-                    <input type="text" id="pos-search" oninput="renderPOSProducts()" placeholder="ابحث عن هدية أو كود..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:border-[#C5A059]">
+                    <input type="text" id="pos-search" oninput="renderPOSProducts()" placeholder="ابحث عن بضاعة أو كود..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:border-[#C5A059]">
                     <div id="pos-product-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[480px] overflow-y-auto custom-scrollbar p-1"></div>
                 </div>
 
@@ -206,7 +206,7 @@
                     <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 border border-slate-200 shadow-sm space-y-3">
                         <div class="border-b pb-2 flex justify-between items-center">
                             <h4 class="font-black text-slate-900 text-sm flex items-center">
-                                <i class="fa-solid fa-receipt text-[#C5A059] ml-2"></i> سجل الفواتير الصادرة والقديمة
+                                <i class="fa-solid fa-receipt text-[#C5A059] ml-2"></i> سجل فواتير المحل والمبيعات (manger)
                             </h4>
                             <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-bold">معاينة صورة</span>
                         </div>
@@ -293,7 +293,7 @@
                             <tr>
                                 <th class="p-3">الصورة</th>
                                 <th class="p-3">الكود</th>
-                                <th class="p-3">الهدية</th>
+                                <th class="p-3">البضاعة</th>
                                 <th class="p-3">القسم</th>
                                 <th class="p-3">البيع</th>
                                 <th class="p-3">المخزون</th>
@@ -334,17 +334,17 @@
                     <p class="text-[10px] text-slate-500 font-semibold">القيمة البيعية المتوقعة</p>
                 </div>
                 <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 border shadow-sm space-y-1">
-                    <p class="text-xs font-bold text-slate-400">إجمالي عدد قطع الهدايا بالمخزن</p>
+                    <p class="text-xs font-bold text-slate-400">إجمالي عدد قطع البضاعة بالمخزن</p>
                     <h4 class="text-2xl font-black text-slate-900"><span id="dash-total-pieces">0</span> قطعة</h4>
                     <p class="text-[10px] text-slate-500 font-semibold">مجموع القطع لكل الأصناف</p>
                 </div>
             </div>
 
-            <!-- إدارة فئات الهدايا -->
+            <!-- إدارة فئات البضاعة -->
             <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-6 border shadow-sm space-y-4">
                 <div class="flex justify-between items-center border-b pb-3">
                     <h3 class="text-lg font-black text-slate-900 flex items-center">
-                        <i class="fa-solid fa-folder-tree text-[#C5A059] ml-2"></i> إدارة فئات وبنود الهدايا
+                        <i class="fa-solid fa-folder-tree text-[#C5A059] ml-2"></i> إدارة فئات وبنود البضاعة
                     </h3>
                     <button onclick="openAddCategoryModal()" class="bg-[#C5A059] hover:bg-[#b08b49] text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md">
                         <i class="fa-solid fa-plus ml-1"></i> إضافة فئة جديدة
@@ -358,7 +358,7 @@
                     <div class="flex justify-between items-center border-b pb-3">
                         <h3 class="text-lg font-black text-slate-900">إدارة وتعديل المخزون والأسعار</h3>
                         <button onclick="openAddProductModal()" class="bg-[#C5A059] hover:bg-[#b08b49] text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md">
-                            <i class="fa-solid fa-plus ml-1"></i> إضافة هدية جديدة للمحل
+                            <i class="fa-solid fa-plus ml-1"></i> إضافة بضاعة جديدة للمحل
                         </button>
                     </div>
                     <div class="overflow-x-auto">
@@ -367,7 +367,7 @@
                                 <tr>
                                     <th class="p-3">صورة</th>
                                     <th class="p-3">الكود</th>
-                                    <th class="p-3">الهدية</th>
+                                    <th class="p-3">البضاعة</th>
                                     <th class="p-3">التكلفة</th>
                                     <th class="p-3">البيع</th>
                                     <th class="p-3">المخزون</th>
@@ -381,7 +381,7 @@
 
                 <div class="lg:col-span-4 bg-white/90 backdrop-blur-sm rounded-3xl p-6 border shadow-sm space-y-4">
                     <div class="border-b pb-3">
-                        <h3 class="text-lg font-black text-slate-900">سجل الفواتير الصادرة (manger)</h3>
+                        <h3 class="text-lg font-black text-slate-900">سجل فواتير المحل والمبيعات (manger)</h3>
                         <p class="text-xs text-slate-500">اضغط على أي فاتورة لمعاينتها كصورة أو إلغائها</p>
                     </div>
                     <div id="recent-orders-list" class="space-y-3 max-h-[350px] overflow-y-auto custom-scrollbar"></div>
@@ -641,18 +641,18 @@
     <div id="product-modal" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4">
             <div class="flex justify-between border-b pb-3">
-                <h3 id="modal-title" class="font-black text-lg">إضافة هدية جديدة للمخزن</h3>
+                <h3 id="modal-title" class="font-black text-lg">إضافة بضاعة جديدة للمخزن</h3>
                 <button onclick="closeProductModal()">✕</button>
             </div>
             <input type="hidden" id="edit-prod-id">
             <div class="space-y-3 text-xs font-bold">
                 <div>
-                    <label class="text-slate-600 block mb-1">كود الهدية (متسلسل تلقائياً):</label>
+                    <label class="text-slate-600 block mb-1">كود البضاعة (متسلسل تلقائياً):</label>
                     <input type="text" id="prod-code" readonly class="w-full border p-2.5 rounded-xl bg-slate-100 text-[#C5A059] font-black cursor-not-allowed">
                 </div>
                 <div>
-                    <label class="text-slate-600 block mb-1">اسم الهدية / الموديل:</label>
-                    <input type="text" id="prod-name" placeholder="اسم الهدية..." class="w-full border p-2.5 rounded-xl">
+                    <label class="text-slate-600 block mb-1">اسم البضاعة / الموديل:</label>
+                    <input type="text" id="prod-name" placeholder="اسم البضاعة..." class="w-full border p-2.5 rounded-xl">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -697,7 +697,7 @@
         </div>
     </div>
 
-    <!-- PRINTABLE RECEIPT TEMPLATE (الشكل المخفي للرسم) -->
+    <!-- PRINTABLE RECEIPT TEMPLATE -->
     <div id="printable-receipt" class="hidden max-w-2xl mx-auto p-8 bg-white text-xs space-y-6" dir="ltr">
         <div class="flex justify-between items-start border-b border-slate-300 pb-5">
             <div class="space-y-1">
@@ -1000,7 +1000,7 @@
                                 <i class="fa-solid fa-chevron-${isOpen ? 'up' : 'down'} text-slate-400 text-xs"></i>
                             </button>
                             <div class="${isOpen ? 'block' : 'hidden'} p-4 border-t bg-slate-50/50 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                ${productsHtml || '<p class="col-span-full text-center text-slate-400 py-4">لا توجد هدايا في هذه الفئة حالياً</p>'}
+                                ${productsHtml || '<p class="col-span-full text-center text-slate-400 py-4">لا توجد بضاعة في هذه الفئة حالياً</p>'}
                             </div>
                         </div>
                     `;
@@ -1255,7 +1255,7 @@
 
         function addToPOS(id) {
             const p = state.products.find(x => x.id === id);
-            if (!p || p.stock <= 0) return alert('عذراً، هذه الهدية نفذت من المخزون بالمحل!');
+            if (!p || p.stock <= 0) return alert('عذراً، هذه البضاعة نفذت من المخزون بالمحل!');
             
             const item = state.posCart.find(x => x.id === id);
             if (item) {
@@ -1501,7 +1501,7 @@
         }
 
         function previewPOSReceiptAsImageView() {
-            if (state.posCart.length === 0) return alert('برجاء اختيار هدايا للفاتورة أولاً!');
+            if (state.posCart.length === 0) return alert('برجاء اختيار بضاعة للفاتورة أولاً!');
             const custName = document.getElementById('cust-name').value.trim() || 'عميل نقدي';
             const custPhone = document.getElementById('cust-phone').value.trim() || '-';
             const discount = parseFloat(document.getElementById('pos-discount').value) || 0;
@@ -1516,7 +1516,7 @@
         }
 
         function checkoutPOS() {
-            if (state.posCart.length === 0) return alert('برجاء اختيار هدايا للفاتورة أولاً!');
+            if (state.posCart.length === 0) return alert('برجاء اختيار بضاعة للفاتورة أولاً!');
             
             const custName = document.getElementById('cust-name').value.trim();
             const custPhone = document.getElementById('cust-phone').value.trim();
@@ -1616,7 +1616,7 @@
                 `;
             });
 
-            document.getElementById('rec-[#C5A059]').innerText = subtotal.toFixed(2) + ' EGP';
+            document.getElementById('rec-subtotal').innerText = subtotal.toFixed(2) + ' EGP';
 
             const discRow = document.getElementById('rec-discount-row');
             if (discount > 0) {
@@ -1694,7 +1694,7 @@
         }
 
         function openAddProductModal() {
-            document.getElementById('modal-title').innerText = 'إضافة هدية جديدة للمخزن';
+            document.getElementById('modal-title').innerText = 'إضافة بضاعة جديدة للمخزن';
             document.getElementById('edit-prod-id').value = '';
             
             let maxCode = 0;
@@ -1719,11 +1719,11 @@
         function openEditProductModal(id) {
             const p = state.products.find(x => x.id === id);
             if (!p) return;
-            document.getElementById('modal-title').innerText = 'تعديل بيانات ومواصفات الهدية';
+            document.getElementById('modal-title').innerText = 'تعديل بيانات ومواصفات البضاعة';
             document.getElementById('edit-prod-id').value = p.id;
             document.getElementById('prod-code').value = p.code || 'G-001';
             document.getElementById('prod-name').value = p.name;
-            document.getElementById('prod-[#C5A059]').value = p.cost || 0;
+            document.getElementById('prod-cost').value = p.cost || 0;
             document.getElementById('prod-price').value = p.price;
             document.getElementById('prod-stock').value = p.stock;
             populateCategoryDropdown();
@@ -1746,7 +1746,7 @@
             const category = document.getElementById('prod-category').value;
             const image = document.getElementById('prod-image').value.trim() || "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500&q=80";
 
-            if (!name || isNaN(price)) return alert('برجاء إدخال اسم الهدية وسعر البيع!');
+            if (!name || isNaN(price)) return alert('برجاء إدخال اسم البضاعة وسعر البيع!');
 
             const prodData = { code, name, cost, price, stock, category, image };
 
@@ -1761,7 +1761,7 @@
         }
 
         function deleteProd(id) {
-            if (confirm('هل أنت متأكد من حذف هذه الهدية نهائياً من السحابة؟')) {
+            if (confirm('هل أنت متأكد من حذف هذه البضاعة نهائياً من السحابة؟')) {
                 db.collection("products").doc(id).delete();
             }
         }
