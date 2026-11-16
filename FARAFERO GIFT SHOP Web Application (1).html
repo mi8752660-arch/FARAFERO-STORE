@@ -2054,7 +2054,38 @@
             }
         }
 
+      
         document.addEventListener('DOMContentLoaded', initApp);
+    // دالة حفظ جميع إعدادات ونصوص موقع العملاء والإدارة
+function saveAllSettingsCloud() {
+    const titleInput = document.getElementById('setting-logo-title');
+    const subInput = document.getElementById('setting-logo-subtitle');
+    const tagInput = document.getElementById('setting-hero-tag');
+    const headingInput = document.getElementById('setting-hero-title');
+    const subtextInput = document.getElementById('setting-hero-sub');
+
+    const logoTitle = titleInput ? titleInput.value.trim() : "FARAFERO";
+    const logoSubtitle = subInput ? subInput.value.trim() : "GIFT SHOP";
+    const heroTag = tagInput ? tagInput.value.trim() : "Make Every Moment Special";
+    const heroTitle = headingInput ? headingInput.value.trim() : "اصنع لحظات لا تُنسى لمن تحب";
+    const heroSub = subtextInput ? subtextInput.value.trim() : "اكتشف تشكيلة راقية من أرقى الهدايا...";
+    const footerTag = "Farafero Gift Shop";
+
+    // التأكد من الاتصال بـ Firebase وحفظ البيانات
+    db.collection("settings").doc("branding").set({
+        logoTitle,
+        logoSubtitle,
+        footerTag,
+        heroTag,
+        heroTitle,
+        heroSub
+    }, { merge: true }).then(() => {
+        alert('تم حفظ وتحديث كل الكلمات والبراند سحابياً بنجاح يا فنان! 🚀');
+    }).catch((error) => {
+        console.error("Error saving settings: ", error);
+        alert('حدث خطأ أثناء الحفظ، تأكد من الاتصال بالإنترنت.');
+    });
+}
     </script>
 </body>
 </html>
